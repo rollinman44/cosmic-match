@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>จักรราศีคู่แท้ · ค้นหาคู่แท้ของคุณ</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Prompt:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --ink: #12100e; --gold: #b8862a; --gold2: #e8c96a; --deep: #1e1208;
+    --parch: #faf6f0; --stone: #e8e0d4; --mist: #7a6e60;
+    --red: #9b2020; --sky: #1e4a78; --thai: #7a1060; --thai2: #d4a0c4;
+    --jade: #2a6e5a; --good: #7aaa2e; --neutral: #d4960a; --challenge: #c84030;
+  }
+  body { background: var(--parch); color: var(--ink); font-family: 'Prompt', sans-serif; font-weight: 300; min-height: 100vh; }
+
+  /* HERO */
+  .hero { background: var(--deep); color: #fff; text-align: center; padding: 52px 24px 44px; position: relative; overflow: hidden; }
+  .hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at 50% 0%, rgba(184,134,42,.25) 0%, transparent 70%); pointer-events: none; }
+  .hero-symbol { font-size: 44px; letter-spacing: 12px; opacity: .8; margin-bottom: 16px; }
+  .hero h1 { font-family: 'Prompt', sans-serif; font-weight: 300; font-size: clamp(26px,5vw,46px); color: #fff; margin-bottom: 8px; }
+  .hero h1 em { font-style: italic; color: var(--gold2); }
+  .hero p { font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: rgba(255,255,255,.45); margin-bottom: 36px; }
+
+  /* INPUT FORM */
+  .input-wrap { background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.15); border-radius: 8px; padding: 24px 28px; max-width: 420px; margin: 0 auto; }
+  .input-label { font-size: 10px; letter-spacing: .16em; text-transform: uppercase; color: rgba(255,255,255,.45); margin-bottom: 8px; display: block; }
+  .input-row { display: flex; gap: 10px; align-items: center; }
+  .date-input { flex: 1; background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.2); border-radius: 4px; padding: 12px 14px; color: #fff; font-family: 'Prompt', sans-serif; font-size: 15px; font-weight: 300; outline: none; }
+  .date-input:focus { border-color: var(--gold2); }
+  .date-input::-webkit-calendar-picker-indicator { filter: invert(1); opacity: .6; }
+  .calc-btn { background: var(--gold); color: #fff; border: none; border-radius: 4px; padding: 12px 20px; font-family: 'Prompt', sans-serif; font-size: 13px; font-weight: 500; cursor: pointer; letter-spacing: .06em; transition: background .2s; white-space: nowrap; }
+  .calc-btn:hover { background: #a07020; }
+
+  /* RESULTS */
+  .results { max-width: 900px; margin: 0 auto; padding: 44px 20px 60px; display: none; }
+
+  /* Profile row */
+  .profile-row { display: grid; grid-template-columns: repeat(3,1fr); gap: 14px; margin-bottom: 40px; }
+  .profile-card { background: #fff; border-radius: 4px; padding: 18px 16px; box-shadow: 0 1px 4px rgba(0,0,0,.07); text-align: center; }
+  .profile-card.lp  { border-top: 3px solid var(--gold); }
+  .profile-card.cz  { border-top: 3px solid var(--red); }
+  .profile-card.wz  { border-top: 3px solid var(--sky); }
+  .pc-icon { font-size: 32px; margin-bottom: 6px; }
+  .pc-sys { font-size: 9px; letter-spacing: .14em; text-transform: uppercase; color: var(--mist); margin-bottom: 3px; }
+  .pc-name { font-family: 'Prompt', sans-serif; font-size: 20px; color: var(--ink); margin-bottom: 2px; }
+  .pc-sub { font-size: 11px; color: var(--mist); font-style: italic; }
+
+  /* Thai banner */
+  .thai-banner { background: linear-gradient(135deg,#3a0828,#7a1060); border-radius: 4px; padding: 20px 22px; margin-bottom: 40px; color: #fff; display: flex; gap: 18px; align-items: flex-start; flex-wrap: wrap; }
+  .thai-left { flex: 1; min-width: 160px; }
+  .thai-eye { font-size: 9px; letter-spacing: .2em; text-transform: uppercase; color: rgba(255,255,255,.45); margin-bottom: 5px; }
+  .thai-title { font-family: 'Prompt', sans-serif; font-size: 22px; color: #fff; margin-bottom: 6px; }
+  .thai-title em { color: var(--thai2); font-style: italic; }
+  .thai-body { font-size: 12px; color: rgba(255,255,255,.6); line-height: 1.6; }
+  .thai-animals { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+  .thai-pill { background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.2); border-radius: 30px; padding: 8px 14px; text-align: center; }
+  .thai-pill-icon { font-size: 22px; }
+  .thai-pill-name { font-family: 'Prompt', sans-serif; font-size: 13px; color: var(--thai2); display: block; margin-top: 1px; }
+
+  /* Section head */
+  .sec-eye { font-size: 9px; letter-spacing: .2em; text-transform: uppercase; color: var(--mist); margin-bottom: 6px; }
+  .sec-title { font-family: 'Prompt', sans-serif; font-size: clamp(20px,3vw,30px); font-weight: 300; color: var(--ink); margin-bottom: 24px; }
+  .sec-title em { color: var(--gold); font-style: italic; }
+
+  /* Top 3 */
+  .top-grid { display: grid; grid-template-columns: repeat(auto-fill,minmax(260px,1fr)); gap: 16px; margin-bottom: 44px; }
+  .top-card { background: #fff; border-radius: 4px; padding: 20px 18px; box-shadow: 0 1px 4px rgba(0,0,0,.07); position: relative; }
+  .top-card.r1 { border-top: 3px solid var(--gold); }
+  .top-card.r2 { border-top: 3px solid var(--mist); }
+  .top-card.r3 { border-top: 3px solid #a07840; }
+  .rank-num { position: absolute; top: 14px; right: 14px; font-family: 'Prompt', sans-serif; font-size: 26px; font-weight: 600; opacity: .1; color: var(--ink); }
+  .top-icons { font-size: 24px; letter-spacing: 4px; margin-bottom: 6px; }
+  .top-name { font-family: 'Prompt', sans-serif; font-size: 20px; color: var(--ink); margin-bottom: 3px; }
+  .top-combo { font-size: 11px; color: var(--mist); font-style: italic; margin-bottom: 12px; }
+  .score-row { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
+  .score-lbl { font-size: 10px; letter-spacing: .08em; text-transform: uppercase; color: var(--mist); min-width: 64px; }
+  .bar-w { flex: 1; height: 4px; background: var(--stone); border-radius: 2px; overflow: hidden; }
+  .bar-f { height: 100%; border-radius: 2px; }
+  .score-pct { font-size: 11px; color: var(--mist); min-width: 30px; text-align: right; }
+  .composite-row { display: flex; align-items: center; gap: 8px; padding-top: 10px; margin-top: 8px; border-top: 1px solid var(--stone); }
+  .comp-lbl { font-size: 10px; letter-spacing: .08em; text-transform: uppercase; color: var(--mist); min-width: 64px; }
+  .comp-bar-w { flex: 1; height: 6px; background: var(--stone); border-radius: 3px; overflow: hidden; }
+  .comp-bar-f { height: 100%; border-radius: 3px; }
+  .comp-pct { font-family: 'Prompt', sans-serif; font-size: 20px; font-weight: 600; color: var(--gold); min-width: 44px; text-align: right; }
+  .top-note { font-size: 11px; font-style: italic; color: var(--mist); margin-top: 10px; padding-top: 8px; border-top: 1px solid var(--stone); line-height: 1.5; }
+
+  /* Full table */
+  .match-table { background: #fff; border-radius: 4px; box-shadow: 0 1px 4px rgba(0,0,0,.06); overflow: hidden; margin-bottom: 40px; }
+  .mt-head { display: grid; grid-template-columns: 1fr 90px 90px 90px 100px 80px; padding: 9px 18px; background: var(--deep); color: rgba(255,255,255,.5); font-size: 9px; letter-spacing: .14em; text-transform: uppercase; align-items: center; gap: 0; }
+  .mt-row { display: grid; grid-template-columns: 1fr 90px 90px 90px 100px 80px; padding: 11px 18px; border-bottom: 1px solid var(--stone); align-items: center; gap: 0; transition: background .15s; }
+  .mt-row:last-child { border-bottom: none; }
+  .mt-row:hover { background: #fdf9f3; }
+  .mt-row.is-thai { background: #fcf5fb; }
+  .mt-row.is-thai:hover { background: #f8edf6; }
+  .partner-name { font-family: 'Prompt', sans-serif; font-size: 15px; color: var(--ink); display: flex; align-items: center; gap: 6px; }
+  .sc-cell { display: flex; align-items: center; gap: 6px; }
+  .sc-bar-w { flex: 1; height: 4px; background: var(--stone); border-radius: 2px; overflow: hidden; }
+  .sc-bar-f { height: 100%; border-radius: 2px; }
+  .sc-pct { font-size: 11px; color: var(--mist); min-width: 30px; text-align: right; }
+  .comp-cell { display: flex; align-items: center; gap: 6px; }
+  .comp-cell-bar-w { flex: 1; height: 6px; background: var(--stone); border-radius: 3px; overflow: hidden; }
+  .comp-cell-bar-f { height: 100%; border-radius: 3px; }
+  .comp-cell-pct { font-family: 'Prompt', sans-serif; font-size: 16px; font-weight: 600; min-width: 38px; text-align: right; }
+  .tier-badge { font-size: 9px; letter-spacing: .08em; text-transform: uppercase; padding: 3px 7px; border-radius: 10px; font-weight: 500; white-space: nowrap; }
+  .b-thai      { background: #f3e0ef; color: var(--thai); }
+  .b-excellent { background: #e0f4eb; color: var(--jade); }
+  .b-good      { background: #eef5dc; color: var(--good); }
+  .b-neutral   { background: #fdf3dc; color: var(--neutral); }
+  .b-challenge { background: #fde8e6; color: var(--challenge); }
+
+  /* Legend */
+  .legend { display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 20px; }
+  .leg-item { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--mist); letter-spacing: .06em; text-transform: uppercase; }
+  .leg-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+
+  /* Wisdom */
+  .wisdom { text-align: center; padding: 0 20px; }
+  .wis-line { width: 36px; height: 1px; background: var(--gold); margin: 0 auto 18px; opacity: .4; }
+  .wis-text { font-family: 'Prompt', sans-serif; font-size: 14px; font-style: italic; color: var(--mist); max-width: 480px; margin: 0 auto; line-height: 1.7; }
+
+  /* Share prompt */
+  .share-strip { background: var(--deep); border-radius: 4px; padding: 16px 20px; margin-bottom: 28px; color: rgba(255,255,255,.7); font-size: 12px; line-height: 1.6; text-align: center; }
+  .share-strip em { color: var(--gold2); font-style: normal; font-weight: 500; }
+
+  @media (max-width: 600px) {
+    .profile-row { grid-template-columns: 1fr; }
+    .mt-head, .mt-row { grid-template-columns: 1fr 70px 70px 80px 58px; font-size: 10px; padding: 9px 12px; }
+    .mt-head .wz-col, .mt-row .wz-col { display: none; }
+  }
+  @media (max-width: 400px) {
+    .input-row { flex-direction: column; }
+    .calc-btn { width: 100%; }
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-symbol">🐲 ✦ ☯ ✦ ♐</div>
+  <h1>ค้นหา<em>คู่ของคุณ</em>ด้วยไตรศาสตร์</h1>
+  <p>นักษัตรจีน/ไทย · จักรราศี · เลขศาสตร์ตะวันตก (Numerology)</p>
+  <div class="input-wrap">
+    <label class="input-label" for="dob">กรอกวันเดือนปีเกิดของคุณ</label>
+    <div class="input-row">
+      <input class="date-input" type="date" id="dob" />
+      <button class="calc-btn" onclick="calculate()">ค้นหา ✦</button>
+    </div>
+  </div>
+</div>
+
+<div class="results" id="results"></div>
+
+<script>
+// ── DATA ──
+
+const lpData = {
+  1:  { title:"ผู้บุกเบิก",      role:"ผู้นำ · เป็นตัวของตัวเอง · มุ่งมั่น",        note:"โดดเด่นที่สุดเมื่อคู่กับคนสร้างสรรค์ มีปัญหาเรื่องแบ่งปันบทบาทผู้นำ" },
+  2:  { title:"ผู้สร้างสันติ",   role:"คู่ชีวิต · ละเอียดอ่อน · ประนีประนอม",     note:"รักลึกซึ้งและกลมกลืน ควรหลีกเลี่ยงพลังที่ครอบงำมากเกินไป" },
+  3:  { title:"ผู้สร้างสรรค์",   role:"นักสื่อสาร · ร่าเริง · มีชีวิตชีวา",   note:"เปล่งประกายเมื่อมีอิสระ ต้องการพื้นที่ ไม่ชอบถูกจำกัด" },
+  4:  { title:"ผู้สร้างฐานราก",  role:"รากฐาน · ซื่อสัตย์ · มีวินัย",     note:"เติบโตได้ดีกับโครงสร้างและความทุ่มเท ขัดแย้งกับความวุ่นวาย" },
+  5:  { title:"นักผจญภัย",   role:"อิสระ · ปรับตัวเก่ง · กล้าหาญ",       note:"เบ่งบานเมื่อมีอิสรภาพ เหี่ยวเฉาเมื่อถูกขังด้วยกิจวัตร" },
+  6:  { title:"ผู้เลี้ยงดู",     role:"ผู้ดูแล · ทุ่มเท · กลมกลืน",     note:"เข้ากันได้กับทุกคนมากที่สุด ให้ความรักอย่างไม่มีเงื่อนไข" },
+  7:  { title:"นักพรต",       role:"ผู้แสวงหา · ใคร่ครวญ · ปราชญ์",        note:"สายสัมพันธ์ลึกซึ้งหายาก ต้องการความเข้าใจทางจิตวิญญาณ" },
+  8:  { title:"ผู้ประสบความสำเร็จ", role:"พลังอำนาจ · ทะเยอทะยาน · เด็ดขาด",  note:"พันธมิตรที่ทรงพลังกับความมั่นคง ขัดแย้งกับผู้ต่อต้านพลังขับเคลื่อน" },
+  9:  { title:"นักมนุษยธรรม", role:"ปราชญ์ · เมตตา · เป็นสากล",     note:"รักอย่างลึกซึ้งและกว้างขวาง พลังแห่งความสมบูรณ์เข้ากับหลายคน" },
+  11: { title:"ผู้ให้แสงสว่าง",  role:"สัญชาตญาณขั้นสูง · ได้รับแรงบันดาลใจ · ละเอียดอ่อน", note:"สั่นสะเทือนในระดับสูง ต้องการคู่ที่เคารพความลึกซึ้ง" },
+  22: { title:"ผู้สร้างยิ่งใหญ่",role:"วิสัยทัศน์ขั้นสูง · มีวินัย · ยิ่งใหญ่", note:"เกิดมาเพื่อภารกิจอันยิ่งใหญ่ ต้องการคู่ที่หนักแน่นเท่ากัน" },
+  33: { title:"ครูผู้ยิ่งใหญ่",role:"ความเมตตาขั้นสูง · ไม่เห็นแก่ตัว · ศักดิ์สิทธิ์", note:"การแสดงออกของความรักขั้นสูงสุด สอดคล้องกับหัวใจที่เปิดกว้าง" }
+};
+
+const lpCompat = {
+  1:{1:50,2:40,3:85,4:55,5:80,6:60,7:55,8:45,9:70,11:55,22:60,33:65},
+  2:{1:45,2:70,3:65,4:85,5:40,6:88,7:60,8:80,9:65,11:90,22:75,33:80},
+  3:{1:85,2:65,3:60,4:35,5:88,6:50,7:45,8:55,9:80,11:65,22:40,33:55},
+  4:{1:55,2:85,3:35,4:70,5:30,6:88,7:75,8:82,9:45,11:70,22:90,33:75},
+  5:{1:80,2:40,3:88,4:30,5:65,6:45,7:82,8:50,9:70,11:60,22:35,33:50},
+  6:{1:60,2:88,3:55,4:88,5:50,6:75,7:65,8:72,9:85,11:80,22:85,33:95},
+  7:{1:50,2:60,3:45,4:75,5:82,6:65,7:80,8:40,9:85,11:78,22:55,33:70},
+  8:{1:45,2:80,3:55,4:82,5:50,6:72,7:40,8:60,9:48,11:65,22:85,33:60},
+  9:{1:70,2:65,3:80,4:45,5:70,6:85,7:85,8:48,9:72,11:75,22:50,33:88},
+  11:{1:55,2:90,3:65,4:70,5:60,6:80,7:78,8:65,9:75,11:70,22:88,33:82},
+  22:{1:60,2:75,3:40,4:90,5:35,6:85,7:55,8:85,9:50,11:88,22:72,33:90},
+  33:{1:65,2:80,3:55,4:75,5:50,6:95,7:70,8:60,9:88,11:82,22:90,33:85}
+};
+
+const czMeta = {
+  Rat:    { emoji:"🐭", nameTH:"ชวด (หนู)",    element:"หยางธาตุน้ำ",  thai:["Rabbit","Horse"] },
+  Ox:     { emoji:"🐂", nameTH:"ฉลู (วัว)",    element:"หยินธาตุดิน",   thai:["Dragon","Dog"] },
+  Tiger:  { emoji:"🐯", nameTH:"ขาล (เสือ)",   element:"หยางธาตุไฟ",   thai:["Snake","Pig"] },
+  Rabbit: { emoji:"🐰", nameTH:"เถาะ (กระต่าย)", element:"หยินธาตุไม้",    thai:["Horse","Rat"] },
+  Dragon: { emoji:"🐲", nameTH:"มะโรง (มังกร)", element:"หยางธาตุดิน",  thai:["Goat","Ox"] },
+  Snake:  { emoji:"🐍", nameTH:"มะเส็ง (งู)",    element:"หยินธาตุไฟ",    thai:["Monkey","Tiger"] },
+  Horse:  { emoji:"🐴", nameTH:"มะเมีย (ม้า)",   element:"หยางธาตุทอง",  thai:["Rooster","Rabbit"] },
+  Goat:   { emoji:"🐑", nameTH:"มะแม (แพะ)",    element:"หยินธาตุดิน",   thai:["Dragon","Dog"] },
+  Monkey: { emoji:"🐒", nameTH:"วอก (ลิง)",     element:"หยางธาตุทอง",  thai:["Snake","Pig"] },
+  Rooster:{ emoji:"🐓", nameTH:"ระกา (ไก่)",    element:"หยินธาตุน้ำ",   thai:["Rat","Horse"] },
+  Dog:    { emoji:"🐕", nameTH:"จอ (หมา)",      element:"หยางธาตุดิน",  thai:[] },
+  Pig:    { emoji:"🐷", nameTH:"กุน (หมู)",     element:"หยินธาตุน้ำ",   thai:["Tiger","Monkey"] }
+};
+
+const czCompat = {
+  Rat:    {Rat:72,Ox:95,Tiger:65,Rabbit:70,Dragon:88,Snake:70,Horse:50,Goat:52,Monkey:85,Rooster:68,Dog:45,Pig:48},
+  Ox:     {Rat:95,Ox:70,Tiger:52,Rabbit:65,Dragon:100,Snake:90,Horse:35,Goat:30,Monkey:60,Rooster:88,Dog:100,Pig:58},
+  Tiger:  {Rat:65,Ox:52,Tiger:68,Rabbit:70,Dragon:88,Snake:100,Horse:92,Goat:45,Monkey:28,Rooster:48,Dog:80,Pig:100},
+  Rabbit: {Rat:100,Ox:65,Tiger:70,Rabbit:72,Dragon:50,Snake:68,Horse:100,Goat:92,Monkey:42,Rooster:52,Dog:85,Pig:90},
+  Dragon: {Rat:88,Ox:100,Tiger:88,Rabbit:50,Dragon:65,Snake:75,Horse:58,Goat:100,Monkey:92,Rooster:85,Dog:32,Pig:70},
+  Snake:  {Rat:70,Ox:90,Tiger:100,Rabbit:68,Dragon:75,Snake:70,Horse:55,Goat:48,Monkey:100,Rooster:88,Dog:55,Pig:65},
+  Horse:  {Rat:50,Ox:35,Tiger:92,Rabbit:100,Dragon:58,Snake:55,Horse:68,Goat:88,Monkey:52,Rooster:100,Dog:85,Pig:72},
+  Goat:   {Rat:52,Ox:30,Tiger:45,Rabbit:92,Dragon:100,Snake:48,Horse:88,Goat:70,Monkey:50,Rooster:55,Dog:100,Pig:85},
+  Monkey: {Rat:85,Ox:60,Tiger:28,Rabbit:42,Dragon:92,Snake:100,Horse:52,Goat:50,Monkey:68,Rooster:65,Dog:40,Pig:55},
+  Rooster:{Rat:100,Ox:88,Tiger:48,Rabbit:52,Dragon:85,Snake:88,Horse:100,Goat:55,Monkey:65,Rooster:65,Dog:38,Pig:52},
+  Dog:    {Rat:45,Ox:100,Tiger:80,Rabbit:85,Dragon:32,Snake:55,Horse:85,Goat:100,Monkey:40,Rooster:38,Dog:70,Pig:75},
+  Pig:    {Rat:48,Ox:58,Tiger:100,Rabbit:90,Dragon:70,Snake:65,Horse:72,Goat:85,Monkey:100,Rooster:52,Dog:75,Pig:72}
+};
+
+const wzMeta = {
+  Aries:{sym:"♈",nameTH:"ราศีเมษ",dates:"21 มี.ค.–19 เม.ย.",el:"ไฟ"},Taurus:{sym:"♉",nameTH:"ราศีพฤษภ",dates:"20 เม.ย.–20 พ.ค.",el:"ดิน"},
+  Gemini:{sym:"♊",nameTH:"ราศีเมถุน",dates:"21 พ.ค.–20 มิ.ย.",el:"ลม"},Cancer:{sym:"♋",nameTH:"ราศีกรกฎ",dates:"21 มิ.ย.–22 ก.ค.",el:"น้ำ"},
+  Leo:{sym:"♌",nameTH:"ราศีสิงห์",dates:"23 ก.ค.–22 ส.ค.",el:"ไฟ"},Virgo:{sym:"♍",nameTH:"ราศีกันย์",dates:"23 ส.ค.–22 ก.ย.",el:"ดิน"},
+  Libra:{sym:"♎",nameTH:"ราศีตุลย์",dates:"23 ก.ย.–22 ต.ค.",el:"ลม"},Scorpio:{sym:"♏",nameTH:"ราศีพิจิก",dates:"23 ต.ค.–21 พ.ย.",el:"น้ำ"},
+  Sagittarius:{sym:"♐",nameTH:"ราศีธนู",dates:"22 พ.ย.–21 ธ.ค.",el:"ไฟ"},Capricorn:{sym:"♑",nameTH:"ราศีมังกร",dates:"22 ธ.ค.–19 ม.ค.",el:"ดิน"},
+  Aquarius:{sym:"♒",nameTH:"ราศีกุมภ์",dates:"20 ม.ค.–18 ก.พ.",el:"ลม"},Pisces:{sym:"♓",nameTH:"ราศีมีน",dates:"19 ก.พ.–20 มี.ค.",el:"น้ำ"}
+};
+
+const wzCompat = {
+  Aries:      {Aries:70,Taurus:48,Gemini:85,Cancer:35,Leo:90,Virgo:42,Libra:65,Scorpio:52,Sagittarius:88,Capricorn:38,Aquarius:75,Pisces:50},
+  Taurus:     {Aries:48,Taurus:72,Gemini:50,Cancer:88,Leo:38,Virgo:92,Libra:55,Scorpio:68,Sagittarius:35,Capricorn:90,Aquarius:48,Pisces:70},
+  Gemini:     {Aries:85,Taurus:50,Gemini:68,Cancer:52,Leo:75,Virgo:38,Libra:92,Scorpio:42,Sagittarius:65,Capricorn:35,Aquarius:88,Pisces:45},
+  Cancer:     {Aries:35,Taurus:88,Gemini:52,Cancer:72,Leo:50,Virgo:75,Libra:38,Scorpio:92,Sagittarius:40,Capricorn:65,Aquarius:45,Pisces:90},
+  Leo:        {Aries:90,Taurus:38,Gemini:75,Cancer:50,Leo:70,Virgo:52,Libra:78,Scorpio:35,Sagittarius:88,Capricorn:44,Aquarius:65,Pisces:48},
+  Virgo:      {Aries:42,Taurus:92,Gemini:38,Cancer:75,Leo:52,Virgo:68,Libra:55,Scorpio:72,Sagittarius:32,Capricorn:90,Aquarius:48,Pisces:65},
+  Libra:      {Aries:65,Taurus:55,Gemini:92,Cancer:38,Leo:78,Virgo:55,Libra:70,Scorpio:50,Sagittarius:72,Capricorn:40,Aquarius:88,Pisces:48},
+  Scorpio:    {Aries:52,Taurus:68,Gemini:42,Cancer:92,Leo:35,Virgo:72,Libra:50,Scorpio:68,Sagittarius:52,Capricorn:75,Aquarius:45,Pisces:90},
+  Sagittarius:{Aries:88,Taurus:35,Gemini:65,Cancer:40,Leo:88,Virgo:32,Libra:72,Scorpio:52,Sagittarius:68,Capricorn:50,Aquarius:80,Pisces:48},
+  Capricorn:  {Aries:38,Taurus:90,Gemini:35,Cancer:65,Leo:44,Virgo:90,Libra:40,Scorpio:75,Sagittarius:50,Capricorn:68,Aquarius:55,Pisces:65},
+  Aquarius:   {Aries:75,Taurus:48,Gemini:88,Cancer:45,Leo:65,Virgo:48,Libra:88,Scorpio:45,Sagittarius:80,Capricorn:55,Aquarius:68,Pisces:50},
+  Pisces:     {Aries:50,Taurus:70,Gemini:45,Cancer:90,Leo:48,Virgo:65,Libra:48,Scorpio:90,Sagittarius:48,Capricorn:65,Aquarius:50,Pisces:68}
+};
+
+// Lunar year ranges to determine animal
+const lunarRanges = [
+  ["1924-02-05","1925-01-23","Rat"],["1925-01-24","1926-02-12","Ox"],["1926-02-13","1927-02-01","Tiger"],
+  ["1927-02-02","1928-01-22","Rabbit"],["1928-01-23","1929-02-09","Dragon"],["1929-02-10","1930-01-29","Snake"],
+  ["1930-01-30","1931-02-16","Horse"],["1931-02-17","1932-02-05","Goat"],["1932-02-06","1933-01-25","Monkey"],
+  ["1933-01-26","1934-02-13","Rooster"],["1934-02-14","1935-02-03","Dog"],["1935-02-04","1936-01-23","Pig"],
+  ["1936-01-24","1937-02-10","Rat"],["1937-02-11","1938-01-30","Ox"],["1938-01-31","1939-02-18","Tiger"],
+  ["1939-02-19","1940-02-07","Rabbit"],["1940-02-08","1941-01-26","Dragon"],["1941-01-27","1942-02-14","Snake"],
+  ["1942-02-15","1943-02-04","Horse"],["1943-02-05","1944-01-24","Goat"],["1944-01-25","1945-02-12","Monkey"],
+  ["1945-02-13","1946-02-01","Rooster"],["1946-02-02","1947-01-21","Dog"],["1947-01-22","1948-02-09","Pig"],
+  ["1948-02-10","1949-01-28","Rat"],["1949-01-29","1950-02-16","Ox"],["1950-02-17","1951-02-05","Tiger"],
+  ["1951-02-06","1952-01-26","Rabbit"],["1952-01-27","1953-02-13","Dragon"],["1953-02-14","1954-02-02","Snake"],
+  ["1954-02-03","1955-01-23","Horse"],["1955-01-24","1956-02-11","Goat"],["1956-02-12","1957-01-30","Monkey"],
+  ["1957-01-31","1958-02-17","Rooster"],["1958-02-18","1959-02-07","Dog"],["1959-02-08","1960-01-27","Pig"],
+  ["1960-01-28","1961-02-14","Rat"],["1961-02-15","1962-02-04","Ox"],["1962-02-05","1963-01-24","Tiger"],
+  ["1963-01-25","1964-02-12","Rabbit"],["1964-02-13","1965-02-01","Dragon"],["1965-02-02","1966-01-20","Snake"],
+  ["1966-01-21","1967-02-08","Horse"],["1967-02-09","1968-01-29","Goat"],["1968-01-30","1969-02-16","Monkey"],
+  ["1969-02-17","1970-02-05","Rooster"],["1970-02-06","1971-01-26","Dog"],["1971-01-27","1972-02-14","Pig"],
+  ["1972-02-15","1973-02-02","Rat"],["1973-02-03","1974-01-22","Ox"],["1974-01-23","1975-02-10","Tiger"],
+  ["1975-02-11","1976-01-30","Rabbit"],["1976-01-31","1977-02-17","Dragon"],["1977-02-18","1978-02-06","Snake"],
+  ["1978-02-07","1979-01-27","Horse"],["1979-01-28","1980-02-15","Goat"],["1980-02-16","1981-02-04","Monkey"],
+  ["1981-02-05","1982-01-24","Rooster"],["1982-01-25","1983-02-12","Dog"],["1983-02-13","1984-02-01","Pig"],
+  ["1984-02-02","1985-02-19","Rat"],["1985-02-20","1986-02-08","Ox"],["1986-02-09","1987-01-28","Tiger"],
+  ["1987-01-29","1988-02-16","Rabbit"],["1988-02-17","1989-02-05","Dragon"],["1989-02-06","1990-01-26","Snake"],
+  ["1990-01-27","1991-02-14","Horse"],["1991-02-15","1992-02-03","Goat"],["1992-02-04","1993-01-22","Monkey"],
+  ["1993-01-23","1994-02-09","Rooster"],["1994-02-10","1995-01-30","Dog"],["1995-01-31","1996-02-18","Pig"],
+  ["1996-02-19","1997-02-06","Rat"],["1997-02-07","1998-01-27","Ox"],["1998-01-28","1999-02-15","Tiger"],
+  ["1999-02-16","2000-02-04","Rabbit"],["2000-02-05","2001-01-23","Dragon"],["2001-01-24","2002-02-11","Snake"],
+  ["2002-02-12","2003-01-31","Horse"],["2003-02-01","2004-01-21","Goat"],["2004-01-22","2005-02-08","Monkey"],
+  ["2005-02-09","2006-01-28","Rooster"],["2006-01-29","2007-02-17","Dog"],["2007-02-18","2008-02-06","Pig"],
+  ["2008-02-07","2009-01-25","Rat"],["2009-01-26","2010-02-13","Ox"],["2010-02-14","2011-02-02","Tiger"],
+  ["2011-02-03","2012-01-22","Rabbit"],["2012-01-23","2013-02-09","Dragon"],["2013-02-10","2014-01-30","Snake"],
+  ["2014-01-31","2015-02-18","Horse"],["2015-02-19","2016-02-07","Goat"],["2016-02-08","2017-01-27","Monkey"],
+  ["2017-01-28","2018-02-15","Rooster"],["2018-02-16","2019-02-04","Dog"],["2019-02-05","2020-01-24","Pig"],
+  ["2020-01-25","2021-02-11","Rat"],["2021-02-12","2022-01-31","Ox"],["2022-02-01","2023-01-21","Tiger"],
+  ["2023-01-22","2024-02-09","Rabbit"],["2024-02-10","2025-01-28","Dragon"],["2025-01-29","2026-02-16","Snake"]
+];
+
+// Reduce a number to single digit, but stop and preserve master numbers 11, 22, 33
+function reduceKeepMaster(n) {
+  while (n > 9 && n !== 11 && n !== 22 && n !== 33) {
+    n = String(n).split('').map(Number).reduce((a,b)=>a+b,0);
+  }
+  return n;
+}
+
+// Standard numerology method: reduce month, day, and year SEPARATELY first
+// (each preserving its own master number), then sum those three results
+// and reduce once more, again preserving a master number if it appears.
+// Summing every digit of the full date at once can accidentally create or
+// destroy master numbers — this method avoids that.
+function getLifePath(dateStr) {
+  const [y, m, d] = dateStr.split('-').map(Number);
+  const rMonth = reduceKeepMaster(m);
+  const rDay   = reduceKeepMaster(d);
+  const rYear  = reduceKeepMaster(String(y).split('').map(Number).reduce((a,b)=>a+b,0));
+  const total  = rMonth + rDay + rYear;
+  return reduceKeepMaster(total);
+}
+
+function getChineseAnimal(dateStr) {
+  for (const [start, end, animal] of lunarRanges) {
+    if (dateStr >= start && dateStr <= end) return animal;
+  }
+  // fallback: year-based approximate
+  const year = parseInt(dateStr.slice(0,4));
+  const animals = ["Monkey","Rooster","Dog","Pig","Rat","Ox","Tiger","Rabbit","Dragon","Snake","Horse","Goat"];
+  return animals[(year - 1956) % 12];
+}
+
+function getWesternSign(dateStr) {
+  const [,m,d] = dateStr.split('-').map(Number);
+  if ((m===3&&d>=21)||(m===4&&d<=19)) return "Aries";
+  if ((m===4&&d>=20)||(m===5&&d<=20)) return "Taurus";
+  if ((m===5&&d>=21)||(m===6&&d<=20)) return "Gemini";
+  if ((m===6&&d>=21)||(m===7&&d<=22)) return "Cancer";
+  if ((m===7&&d>=23)||(m===8&&d<=22)) return "Leo";
+  if ((m===8&&d>=23)||(m===9&&d<=22)) return "Virgo";
+  if ((m===9&&d>=23)||(m===10&&d<=22)) return "Libra";
+  if ((m===10&&d>=23)||(m===11&&d<=21)) return "Scorpio";
+  if ((m===11&&d>=22)||(m===12&&d<=21)) return "Sagittarius";
+  if ((m===12&&d>=22)||(m===1&&d<=19)) return "Capricorn";
+  if ((m===1&&d>=20)||(m===2&&d<=18)) return "Aquarius";
+  return "Pisces";
+}
+
+function barColor(pct) {
+  if (pct >= 80) return '#3a9e6a';
+  if (pct >= 60) return '#7aaa2e';
+  if (pct >= 40) return '#d4960a';
+  return '#c84030';
+}
+
+function tierInfo(pct, isThai) {
+  if (isThai) return {cls:'b-thai', text:'✦ คู่ลับไทย'};
+  if (pct >= 80) return {cls:'b-excellent', text:'ดีเยี่ยม'};
+  if (pct >= 60) return {cls:'b-good', text:'ดี'};
+  if (pct >= 40) return {cls:'b-neutral', text:'ปานกลาง'};
+  return {cls:'b-challenge', text:'ท้าทาย'};
+}
+
+function calculate() {
+  const dob = document.getElementById('dob').value;
+  if (!dob) { alert('กรุณากรอกวันเดือนปีเกิดของคุณ'); return; }
+
+  const lp = getLifePath(dob);
+  const animal = getChineseAnimal(dob);
+  const sign = getWesternSign(dob);
+  const lpInfo = lpData[lp];
+  const czInfo = czMeta[animal];
+  const wzInfo = wzMeta[sign];
+
+  // Build all partner combinations
+  const animals = Object.keys(czMeta);
+  const signs = Object.keys(wzMeta);
+  const lps = [1,2,3,4,5,6,7,8,9,11,22,33];
+
+  // Generate representative partner combos (animal + sign pairings, one LP each)
+  const partners = [];
+  for (const a of animals) {
+    for (const s of signs) {
+      const czScore = czCompat[animal][a] ?? 50;
+      const wzScore = wzCompat[sign][s] ?? 50;
+      // pick most compatible LP for this combo
+      const bestLP = lps.reduce((best, l) => {
+        const sc = lpCompat[lp]?.[l] ?? 50;
+        return sc > (lpCompat[lp]?.[best] ?? 50) ? l : best;
+      }, 2);
+      const lpScore = lpCompat[lp]?.[bestLP] ?? 50;
+      const composite = Math.round(lpScore * 0.35 + czScore * 0.40 + wzScore * 0.25);
+      const isThai = czInfo.thai.includes(a);
+      partners.push({ animal: a, sign: s, lp: bestLP, lpScore, czScore, wzScore, composite, isThai });
+    }
+  }
+
+  // Sort: thai first, then composite desc
+  partners.sort((a,b) => {
+    if (a.isThai && !b.isThai) return -1;
+    if (!a.isThai && b.isThai) return 1;
+    return b.composite - a.composite;
+  });
+
+  // Top 3 unique animal+sign combos
+  const top3 = [];
+  const seen = new Set();
+  for (const p of [...partners].sort((a,b)=>b.composite-a.composite)) {
+    const key = p.animal+'-'+p.sign;
+    if (!seen.has(key)) { seen.add(key); top3.push(p); }
+    if (top3.length === 3) break;
+  }
+
+  // Top 30 for table
+  const tableRows = partners.slice(0, 30);
+
+  // Thai secret animals
+  const thaiAnimals = czInfo.thai;
+
+  // Render
+  const res = document.getElementById('results');
+  res.style.display = 'block';
+  res.innerHTML = `
+    <!-- Profile -->
+    <div class="profile-row">
+      <div class="profile-card lp">
+        <div class="pc-icon">🔢</div>
+        <div class="pc-sys">เลขศาสตร์</div>
+        <div class="pc-name">เลขชีวิต ${lp}</div>
+        <div class="pc-sub">${lpInfo.title} · ${lpInfo.role.split('·')[0].trim()}</div>
+      </div>
+      <div class="profile-card cz">
+        <div class="pc-icon">${czInfo.emoji}</div>
+        <div class="pc-sys">นักษัตรจีน</div>
+        <div class="pc-name">${czInfo.nameTH}</div>
+        <div class="pc-sub">${czInfo.element}</div>
+      </div>
+      <div class="profile-card wz">
+        <div class="pc-icon">${wzInfo.sym}</div>
+        <div class="pc-sys">ราศีตะวันตก</div>
+        <div class="pc-name">${wzInfo.nameTH}</div>
+        <div class="pc-sub">ธาตุ${wzInfo.el} · ${wzInfo.dates}</div>
+      </div>
+    </div>
+
+    ${thaiAnimals.length ? `
+    <!-- Thai banner -->
+    <div class="thai-banner">
+      <div class="thai-left">
+        <div class="thai-eye">✦ คู่ลับไทยที่ดีที่สุด</div>
+        <div class="thai-title">วิญญาณคู่แท้ของ<em>${czInfo.nameTH}</em></div>
+        <div class="thai-body">ตามตำราโหราศาสตร์ไทย ${czInfo.nameTH} มีคู่ลับที่ถูกลิขิตไว้${thaiAnimals.length === 2 ? 'สองตัว' : 'หนึ่งตัว'} — ${thaiAnimals.map(a => czMeta[a].nameTH).join(' และ ')} ความเข้ากันคู่นี้เหนือกว่าความเข้ากันทั่วไป รู้สึกเหมือนถูกลิขิตมาโดยไม่อาจอธิบายได้</div>
+      </div>
+      <div class="thai-animals">
+        ${thaiAnimals.map(a => `<div class="thai-pill"><div class="thai-pill-icon">${czMeta[a].emoji}</div><span class="thai-pill-name">${czMeta[a].nameTH}</span></div>`).join('')}
+      </div>
+    </div>` : ''}
+
+    <!-- Top 3 -->
+    <div class="sec-eye">คะแนนรวม · ทั้งสามศาสตร์</div>
+    <div class="sec-title">คู่ที่เข้ากัน<em>สูงสุด</em>ของคุณ</div>
+    <div class="top-grid">
+      ${top3.map((p,i) => `
+        <div class="top-card r${i+1}">
+          <div class="rank-num">${['I','II','III'][i]}</div>
+          <div class="top-icons">${czMeta[p.animal].emoji} ${wzMeta[p.sign].sym}</div>
+          <div class="top-name">${czMeta[p.animal].nameTH} · ${wzMeta[p.sign].nameTH}</div>
+          <div class="top-combo">เลขชีวิต ${p.lp} · ${czMeta[p.animal].nameTH} · ${wzMeta[p.sign].nameTH}</div>
+          <div class="score-row"><span class="score-lbl">เลขศาสตร์</span><div class="bar-w"><div class="bar-f" style="width:${p.lpScore}%;background:${barColor(p.lpScore)}"></div></div><span class="score-pct">${p.lpScore}%</span></div>
+          <div class="score-row"><span class="score-lbl">นักษัตรจีน</span><div class="bar-w"><div class="bar-f" style="width:${p.czScore}%;background:${barColor(p.czScore)}"></div></div><span class="score-pct">${p.czScore}%</span></div>
+          <div class="score-row"><span class="score-lbl">ราศีตะวันตก</span><div class="bar-w"><div class="bar-f" style="width:${p.wzScore}%;background:${barColor(p.wzScore)}"></div></div><span class="score-pct">${p.wzScore}%</span></div>
+          <div class="composite-row"><span class="comp-lbl">คะแนนรวม</span><div class="comp-bar-w"><div class="comp-bar-f" style="width:${p.composite}%;background:${barColor(p.composite)}"></div></div><span class="comp-pct">${p.composite}%</span></div>
+          ${p.isThai ? `<p class="top-note">✦ คู่ลับไทยที่ถูกลิขิตไว้ — สายสัมพันธ์ที่รู้สึกเหมือนถูกกำหนดมาตั้งแต่แรกพบ</p>` : ''}
+        </div>
+      `).join('')}
+    </div>
+
+    <!-- Share prompt -->
+    <div class="share-strip">แชร์ให้คนที่คุณรัก — กรอกวันเกิดของเขาเพื่อดูคะแนนความเข้ากันร่วมกัน <em>ทุกคู่มีเรื่องราวที่แตกต่างกัน</em></div>
+
+    <!-- Full table -->
+    <div class="sec-eye">30 อันดับแรก · ความเข้ากันได้แบบเต็ม</div>
+    <div class="sec-title">ตาราง<em>ความกลมกลืน</em>ฉบับเต็ม</div>
+    <div class="legend">
+      <div class="leg-item"><span class="leg-dot" style="background:#7a1060"></span>คู่ลับไทย</div>
+      <div class="leg-item"><span class="leg-dot" style="background:#3a9e6a"></span>80–100%</div>
+      <div class="leg-item"><span class="leg-dot" style="background:#7aaa2e"></span>60–79%</div>
+      <div class="leg-item"><span class="leg-dot" style="background:#d4960a"></span>40–59%</div>
+      <div class="leg-item"><span class="leg-dot" style="background:#c84030"></span>0–39%</div>
+    </div>
+    <div class="match-table">
+      <div class="mt-head"><div>คู่ที่จับคู่</div><div>เลขศาสตร์</div><div>จีน</div><div class="wz-col">ตะวันตก</div><div>คะแนนรวม</div><div>ระดับ</div></div>
+      ${tableRows.map(p => {
+        const tier = tierInfo(p.composite, p.isThai);
+        return `<div class="mt-row${p.isThai?' is-thai':''}">
+          <div class="partner-name">${czMeta[p.animal].emoji} ${wzMeta[p.sign].sym} ${czMeta[p.animal].nameTH} · ${wzMeta[p.sign].nameTH}</div>
+          <div class="sc-cell"><div class="sc-bar-w"><div class="sc-bar-f" style="width:${p.lpScore}%;background:${barColor(p.lpScore)}"></div></div><span class="sc-pct">${p.lpScore}%</span></div>
+          <div class="sc-cell"><div class="sc-bar-w"><div class="sc-bar-f" style="width:${p.czScore}%;background:${barColor(p.czScore)}"></div></div><span class="sc-pct">${p.czScore}%</span></div>
+          <div class="sc-cell wz-col"><div class="sc-bar-w"><div class="sc-bar-f" style="width:${p.wzScore}%;background:${barColor(p.wzScore)}"></div></div><span class="sc-pct">${p.wzScore}%</span></div>
+          <div class="comp-cell"><div class="comp-cell-bar-w"><div class="comp-cell-bar-f" style="width:${p.composite}%;background:${barColor(p.composite)}"></div></div><span class="comp-cell-pct" style="color:${barColor(p.composite)}">${p.composite}%</span></div>
+          <div><span class="tier-badge ${tier.cls}">${tier.text}</span></div>
+        </div>`;
+      }).join('')}
+    </div>
+
+    <div class="wisdom">
+      <div class="wis-line"></div>
+      <p class="wis-text">"แพที่ข้ามแม่น้ำ ไม่จำเป็นต้องแบกไปตลอดทาง<br>ใช้เครื่องมือนี้เป็นเพียงแนวทาง — แต่ปล่อยให้หัวใจเดินทางที่เหลือเอง"</p>
+    </div>
+  `;
+
+  res.scrollIntoView({ behavior: 'smooth' });
+}
+</script>
+</body>
+</html>
