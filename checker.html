@@ -1,0 +1,1098 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cosmic Match Finder Thailand</title>
+<link href="https://fonts.googleapis.com/css2?family=Prompt:ital,wght@0,200;0,300;0,400;0,500;1,200;1,300&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --ink:      #1c1812;
+  --gold:     #b8862a;
+  --gold2:    #d4a843;
+  --gold-lt:  #f0dca8;
+  --warm:     #faf7f2;
+  --parch:    #f5f0e8;
+  --stone:    #e4ddd2;
+  --mist:     #8a7e6e;
+  --fog:      #b8ad9e;
+  --white:    #ffffff;
+  --thai:     #8b2060;
+  --thai-lt:  #f5e8f0;
+  --red-chi:  #9b2020;
+  --sky:      #1e4a78;
+  --sky-lt:   #e8eff8;
+  --good:     #2e7d52;
+  --mid:      #b8862a;
+  --low:      #9b3a2a;
+}
+
+body {
+  background: var(--warm);
+  color: var(--ink);
+  font-family: 'Prompt', sans-serif;
+  font-weight: 300;
+  min-height: 100vh;
+}
+
+/* ── HERO ── */
+.hero {
+  position: relative;
+  min-height: 88vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 0 24px 64px;
+  text-align: center;
+  overflow: hidden;
+}
+
+.hero-photo {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(to bottom,
+      rgba(250,247,242,0) 0%,
+      rgba(250,247,242,0.15) 50%,
+      rgba(250,247,242,0.92) 82%,
+      rgba(250,247,242,1) 100%
+    ),
+    url('https://images.unsplash.com/photo-1529634597503-139d3726fed5?w=1600&q=85&fit=crop&crop=faces') center 30%/cover no-repeat;
+  z-index: 0;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 1;
+  max-width: 580px;
+}
+
+.brand-name {
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: .28em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 18px;
+}
+
+.hero-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 300;
+  font-size: clamp(34px, 6vw, 60px);
+  line-height: 1.1;
+  color: var(--ink);
+  margin-bottom: 8px;
+}
+
+.hero-title em {
+  font-style: italic;
+  color: var(--gold);
+}
+
+.hero-sub {
+  font-size: 13px;
+  font-weight: 300;
+  color: var(--mist);
+  line-height: 1.75;
+  margin-bottom: 36px;
+}
+
+.scroll-cta {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  font-size: 10px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--fog);
+  cursor: pointer;
+  transition: color .2s;
+}
+
+.scroll-cta:hover { color: var(--gold); }
+
+.scroll-cta::after {
+  content: '';
+  width: 1px;
+  height: 28px;
+  background: linear-gradient(to bottom, var(--gold2), transparent);
+}
+
+/* ── FORM ── */
+.form-section {
+  background: var(--white);
+  padding: 64px 24px 72px;
+  border-top: 1px solid var(--stone);
+}
+
+.form-inner { max-width: 760px; margin: 0 auto; }
+
+.sec-eyebrow {
+  font-size: 9px;
+  font-weight: 400;
+  letter-spacing: .24em;
+  text-transform: uppercase;
+  color: var(--fog);
+  margin-bottom: 8px;
+  text-align: center;
+}
+
+.sec-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(24px, 4vw, 36px);
+  font-weight: 300;
+  color: var(--ink);
+  text-align: center;
+  margin-bottom: 6px;
+}
+
+.sec-title em { font-style: italic; color: var(--gold); }
+
+.sec-rule {
+  width: 32px; height: 1px;
+  background: var(--gold2);
+  margin: 14px auto 40px;
+  opacity: .7;
+}
+
+/* Input cards */
+.dob-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-bottom: 28px;
+}
+
+.dob-card {
+  background: var(--parch);
+  border-radius: 8px;
+  padding: 26px 22px 22px;
+  border: 1px solid var(--stone);
+  position: relative;
+}
+
+.dob-card.you  { border-top: 3px solid var(--gold2); }
+.dob-card.them { border-top: 3px solid var(--thai); }
+
+.card-label {
+  font-size: 8px;
+  font-weight: 500;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--fog);
+  margin-bottom: 4px;
+}
+
+.card-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 20px;
+  font-weight: 400;
+  margin-bottom: 18px;
+}
+
+.dob-card.you  .card-title { color: var(--gold); }
+.dob-card.them .card-title { color: var(--thai); }
+
+.fields {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1.4fr;
+  gap: 8px;
+}
+
+.f-wrap { display: flex; flex-direction: column; gap: 4px; }
+
+.f-label {
+  font-size: 8px;
+  font-weight: 400;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--fog);
+}
+
+.f-wrap input {
+  width: 100%;
+  padding: 10px 11px;
+  border: 1px solid var(--stone);
+  border-radius: 6px;
+  background: var(--white);
+  font-family: 'Prompt', sans-serif;
+  font-size: 14px;
+  font-weight: 300;
+  color: var(--ink);
+  outline: none;
+  transition: border-color .2s, box-shadow .2s;
+  -webkit-appearance: none;
+}
+
+.f-wrap input:focus {
+  border-color: var(--gold2);
+  box-shadow: 0 0 0 3px rgba(212,168,67,.1);
+}
+
+.dob-card.them .f-wrap input:focus {
+  border-color: var(--thai);
+  box-shadow: 0 0 0 3px rgba(139,32,96,.08);
+}
+
+.f-wrap input::placeholder { color: #c8bfb2; }
+
+/* no-partner link */
+.no-partner-hint {
+  text-align: center;
+  margin-bottom: 32px;
+  font-size: 12px;
+  font-weight: 300;
+  color: var(--mist);
+  line-height: 1.6;
+}
+
+.no-partner-hint a {
+  color: var(--gold);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  transition: color .2s;
+}
+
+.no-partner-hint a:hover { color: var(--gold2); }
+
+/* Submit */
+.submit-wrap { text-align: center; }
+
+.btn-go {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 15px 52px;
+  background: var(--ink);
+  color: var(--gold-lt);
+  border: none;
+  border-radius: 6px;
+  font-family: 'Prompt', sans-serif;
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all .25s;
+}
+
+.btn-go:hover {
+  background: var(--gold);
+  color: var(--ink);
+}
+
+.err {
+  display: none;
+  text-align: center;
+  margin-top: 14px;
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 14px;
+  color: #b04040;
+}
+
+.err.show { display: block; }
+
+/* ── RESULT ── */
+.result-section {
+  display: none;
+  background: var(--parch);
+  padding: 72px 24px 80px;
+  border-top: 1px solid var(--stone);
+}
+
+.result-section.on { display: block; }
+
+.result-inner { max-width: 840px; margin: 0 auto; }
+
+/* names header */
+.pair-header {
+  text-align: center;
+  margin-bottom: 48px;
+  padding-bottom: 36px;
+  border-bottom: 1px solid var(--stone);
+}
+
+.pair-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+
+.pair-you {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(18px, 3vw, 28px);
+  font-weight: 400;
+  color: var(--gold);
+}
+
+.pair-sep { font-size: 18px; color: var(--stone); }
+
+.pair-them {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(18px, 3vw, 28px);
+  font-weight: 400;
+  color: var(--thai);
+}
+
+.pair-sub {
+  font-size: 10px;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--fog);
+}
+
+/* Score ring */
+.score-center {
+  text-align: center;
+  margin-bottom: 52px;
+}
+
+.ring-wrap {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+}
+
+.ring-svg-wrap {
+  position: relative;
+  width: 156px;
+  height: 156px;
+}
+
+.ring-svg-wrap svg {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+.ring-track {
+  fill: none;
+  stroke: var(--stone);
+  stroke-width: 7;
+}
+
+.ring-fill {
+  fill: none;
+  stroke: var(--gold2);
+  stroke-width: 7;
+  stroke-linecap: round;
+  stroke-dasharray: 402;
+  stroke-dashoffset: 402;
+  transition: stroke-dashoffset 1.5s cubic-bezier(.35,0,.2,1);
+}
+
+.ring-inner {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1px;
+}
+
+.ring-num {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 48px;
+  font-weight: 600;
+  color: var(--gold);
+  line-height: 1;
+}
+
+.ring-pct-sym {
+  font-size: 13px;
+  color: var(--fog);
+}
+
+.ring-lbl {
+  font-size: 9px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--fog);
+}
+
+.verdict {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(16px, 2.5vw, 22px);
+  font-weight: 300;
+  font-style: italic;
+  color: var(--gold);
+  margin-top: 18px;
+  max-width: 440px;
+  margin-left: auto;
+  margin-right: auto;
+  line-height: 1.5;
+}
+
+/* Three system cards */
+.sys-grid {
+  display: grid;
+  grid-template-columns: repeat(3,1fr);
+  gap: 14px;
+  margin-bottom: 40px;
+}
+
+.sys-card {
+  background: var(--white);
+  border-radius: 8px;
+  padding: 20px 16px 18px;
+  border: 1px solid var(--stone);
+  text-align: center;
+  position: relative;
+}
+
+.sys-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  border-radius: 8px 8px 0 0;
+}
+
+.sys-card.num::before { background: linear-gradient(90deg, var(--gold), var(--gold2)); }
+.sys-card.cz::before  { background: linear-gradient(90deg, var(--red-chi), #e8705f); }
+.sys-card.wz::before  { background: linear-gradient(90deg, var(--sky), #6a8ec4); }
+
+.sys-icon { font-size: 24px; margin-bottom: 8px; }
+
+.sys-lbl {
+  font-size: 8px;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--fog);
+  margin-bottom: 8px;
+}
+
+.sys-detail {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 13px;
+  color: var(--mist);
+  line-height: 1.5;
+  margin-bottom: 12px;
+  min-height: 38px;
+}
+
+.sys-bar-wrap {
+  height: 4px;
+  background: var(--stone);
+  border-radius: 2px;
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+
+.sys-bar {
+  height: 100%;
+  border-radius: 2px;
+  width: 0;
+  transition: width 1.3s ease;
+}
+
+.sys-score {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 26px;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.sys-card.num .sys-score { color: var(--gold); }
+.sys-card.cz  .sys-score { color: var(--red-chi); }
+.sys-card.wz  .sys-score { color: var(--sky); }
+
+/* Thai Secret block */
+.thai-block {
+  background: var(--white);
+  border: 1px solid #e0c8d8;
+  border-radius: 8px;
+  padding: 26px 26px 22px;
+  margin-bottom: 36px;
+  position: relative;
+  overflow: hidden;
+}
+
+.thai-block::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--thai), #d490b8, var(--gold2));
+  border-radius: 8px 8px 0 0;
+}
+
+.thai-eye {
+  font-size: 9px;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--thai);
+  margin-bottom: 8px;
+  opacity: .8;
+}
+
+.thai-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 20px;
+  font-weight: 400;
+  color: var(--ink);
+  margin-bottom: 10px;
+}
+
+.thai-title em { font-style: italic; color: var(--thai); }
+
+.thai-body {
+  font-size: 13px;
+  font-weight: 300;
+  color: var(--mist);
+  line-height: 1.75;
+  margin-bottom: 14px;
+}
+
+.thai-body strong { color: var(--ink); font-weight: 400; }
+
+.match-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 16px;
+  background: var(--thai-lt);
+  border: 1px solid #e0c0d4;
+  border-radius: 20px;
+  font-size: 13px;
+  color: var(--thai);
+  font-family: 'Cormorant Garamond', serif;
+}
+
+.no-match-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 16px;
+  background: var(--parch);
+  border: 1px solid var(--stone);
+  border-radius: 20px;
+  font-size: 12px;
+  color: var(--fog);
+}
+
+/* Reading */
+.reading-block {
+  background: var(--white);
+  border: 1px solid var(--stone);
+  border-radius: 8px;
+  padding: 26px 26px 22px;
+  margin-bottom: 32px;
+}
+
+.reading-eye {
+  font-size: 9px;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--fog);
+  margin-bottom: 12px;
+}
+
+.reading-text {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(14px, 2vw, 17px);
+  font-weight: 300;
+  font-style: italic;
+  color: var(--mist);
+  line-height: 1.85;
+}
+
+/* Reset */
+.reset-row {
+  text-align: center;
+  padding-top: 8px;
+}
+
+.btn-reset {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 30px;
+  background: transparent;
+  border: 1px solid var(--stone);
+  border-radius: 6px;
+  font-family: 'Prompt', sans-serif;
+  font-size: 10px;
+  font-weight: 300;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--fog);
+  cursor: pointer;
+  transition: all .2s;
+}
+
+.btn-reset:hover {
+  border-color: var(--gold2);
+  color: var(--gold);
+}
+
+/* Footer */
+.site-footer {
+  background: var(--white);
+  border-top: 1px solid var(--stone);
+  text-align: center;
+  padding: 28px 24px;
+}
+
+.footer-text {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 12px;
+  font-style: italic;
+  color: var(--fog);
+  letter-spacing: .06em;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .dob-grid   { grid-template-columns: 1fr; }
+  .sys-grid   { grid-template-columns: 1fr; }
+  .fields     { grid-template-columns: 1fr 1fr 1.4fr; }
+  .thai-block { padding: 20px 16px; }
+  .reading-block { padding: 20px 16px; }
+  .hero       { min-height: 75vh; padding-bottom: 48px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ── HERO ── -->
+<section class="hero">
+  <div class="hero-photo"></div>
+  <div class="hero-content">
+    <p class="brand-name">Cosmic Match Finder Thailand</p>
+    <h1 class="hero-title">คุณกับเขา<br><em>พลังแห่งดวงดาวเข้ากันแค่ไหน?</em></h1>
+    <p class="hero-sub">
+      ไตรศาสตร์ดูคู่ — นักษัตรไทยและจีน · จักรราศีตะวันตก · เลขศาสตร์<br>
+      คำตอบที่ลึกกว่าคำว่า "เข้ากันได้"
+    </p>
+    <span class="scroll-cta" onclick="document.getElementById('formSection').scrollIntoView({behavior:'smooth'})">
+      กรอกวันเกิดด้านล่าง
+    </span>
+  </div>
+</section>
+
+<!-- ── FORM ── -->
+<section class="form-section" id="formSection">
+  <div class="form-inner">
+    <p class="sec-eyebrow">เริ่มต้นที่นี่</p>
+    <h2 class="sec-title">กรอก<em>วันเกิด</em>ของคุณและคู่ที่คุณต้องการรู้</h2>
+    <div class="sec-rule"></div>
+
+    <div class="dob-grid">
+      <div class="dob-card you">
+        <div class="card-label">คนที่หนึ่ง</div>
+        <div class="card-title">วันเกิดของคุณ</div>
+        <div class="fields">
+          <div class="f-wrap">
+            <label class="f-label">วัน</label>
+            <input type="number" id="y-d" placeholder="วัน" min="1" max="31">
+          </div>
+          <div class="f-wrap">
+            <label class="f-label">เดือน</label>
+            <input type="number" id="y-m" placeholder="เดือน" min="1" max="12">
+          </div>
+          <div class="f-wrap">
+            <label class="f-label">ปี (ค.ศ.) เท่านั้น</label>
+            <input type="number" id="y-y" placeholder="เช่น 1990" min="1924" max="2006">
+          </div>
+        </div>
+      </div>
+
+      <div class="dob-card them">
+        <div class="card-label">คนที่สอง</div>
+        <div class="card-title">วันเกิดของเขา / เธอ</div>
+        <div class="fields">
+          <div class="f-wrap">
+            <label class="f-label">วัน</label>
+            <input type="number" id="p-d" placeholder="วัน" min="1" max="31">
+          </div>
+          <div class="f-wrap">
+            <label class="f-label">เดือน</label>
+            <input type="number" id="p-m" placeholder="เดือน" min="1" max="12">
+          </div>
+          <div class="f-wrap">
+            <label class="f-label">ปี (ค.ศ.) เท่านั้น</label>
+            <input type="number" id="p-y" placeholder="เช่น 1988" min="1924" max="2006">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <p class="no-partner-hint">
+      ถ้ายังไม่มีคู่ อยากรู้ว่าคู่ที่ดีที่สุดเกิดราศีไหน
+      <a href="https://rollinman44.github.io/cosmic-match/index-th.html" target="_blank">กดลิงค์นี้</a>
+    </p>
+
+    <div class="submit-wrap">
+      <button class="btn-go" onclick="calculate()">
+        ✦ &nbsp;ค้นหาความเข้ากัน
+      </button>
+      <p class="err" id="errMsg">กรุณากรอกวันเกิดให้ครบทั้งสองคน</p>
+    </div>
+  </div>
+</section>
+
+<!-- ── RESULT ── -->
+<section class="result-section" id="resultSec">
+  <div class="result-inner">
+
+    <div class="pair-header">
+      <div class="pair-row">
+        <span class="pair-you"  id="lblYou">—</span>
+        <span class="pair-sep">✦</span>
+        <span class="pair-them" id="lblThem">—</span>
+      </div>
+      <p class="pair-sub">ผลลัพธ์ความเข้ากันได้จากไตรศาสตร์</p>
+    </div>
+
+    <!-- Ring -->
+    <div class="score-center">
+      <div class="ring-wrap">
+        <div class="ring-svg-wrap">
+          <svg viewBox="0 0 140 140">
+            <circle class="ring-track" cx="70" cy="70" r="64"/>
+            <circle class="ring-fill" id="ringFill" cx="70" cy="70" r="64"/>
+          </svg>
+          <div class="ring-inner">
+            <span class="ring-num" id="ringNum">0</span>
+            <span class="ring-pct-sym">%</span>
+          </div>
+        </div>
+        <span class="ring-lbl">ความเข้ากันโดยรวม</span>
+      </div>
+      <div class="verdict" id="verdict"></div>
+    </div>
+
+    <!-- Systems -->
+    <div class="sys-grid">
+      <div class="sys-card num">
+        <div class="sys-icon">🔢</div>
+        <div class="sys-lbl">เลขศาสตร์</div>
+        <div class="sys-detail" id="numDet">—</div>
+        <div class="sys-bar-wrap">
+          <div class="sys-bar" id="numBar" style="background:linear-gradient(90deg,#b8862a,#d4a843)"></div>
+        </div>
+        <div class="sys-score" id="numScr">—</div>
+      </div>
+      <div class="sys-card cz">
+        <div class="sys-icon">🏮</div>
+        <div class="sys-lbl">นักษัตรจีน</div>
+        <div class="sys-detail" id="czDet">—</div>
+        <div class="sys-bar-wrap">
+          <div class="sys-bar" id="czBar" style="background:linear-gradient(90deg,#9b2020,#e8705f)"></div>
+        </div>
+        <div class="sys-score" id="czScr">—</div>
+      </div>
+      <div class="sys-card wz">
+        <div class="sys-icon">⭐</div>
+        <div class="sys-lbl">จักรราศีตะวันตก</div>
+        <div class="sys-detail" id="wzDet">—</div>
+        <div class="sys-bar-wrap">
+          <div class="sys-bar" id="wzBar" style="background:linear-gradient(90deg,#1e4a78,#6a8ec4)"></div>
+        </div>
+        <div class="sys-score" id="wzScr">—</div>
+      </div>
+    </div>
+
+    <!-- Thai Secret -->
+    <div class="thai-block">
+      <div class="thai-eye">✦ ศาสตร์โบราณของไทย</div>
+      <div class="thai-title">คู่ลับ<em>ไทย</em></div>
+      <div class="thai-body" id="thaiBody">—</div>
+      <div id="thaiBadge"></div>
+    </div>
+
+    <!-- Reading -->
+    <div class="reading-block">
+      <div class="reading-eye">✦ บทอ่านของคุณ</div>
+      <div class="reading-text" id="readingTxt">—</div>
+    </div>
+
+    <div class="reset-row">
+      <button class="btn-reset" onclick="doReset()">← คำนวณใหม่</button>
+    </div>
+
+  </div>
+</section>
+
+<footer class="site-footer">
+  <p class="footer-text">Cosmic Match Finder Thailand · ไตรศาสตร์ดูคู่</p>
+</footer>
+
+<script>
+// ── LIFE PATH ──
+function reduce(n) {
+  if (n===11||n===22||n===33) return n;
+  while (n>9) {
+    n = String(n).split('').reduce((a,c)=>a+ +c,0);
+    if (n===11||n===22||n===33) return n;
+  }
+  return n;
+}
+function lifePath(d,m,y) {
+  return reduce(reduce(d)+reduce(m)+reduce(String(y).split('').reduce((a,c)=>a+ +c,0)));
+}
+
+const lpNames = {
+  1:'เส้นทาง 1 · ผู้นำ',2:'เส้นทาง 2 · ผู้สร้างสันติ',3:'เส้นทาง 3 · ผู้สร้างสรรค์',
+  4:'เส้นทาง 4 · ผู้สร้างรากฐาน',5:'เส้นทาง 5 · ผู้แสวงหา',6:'เส้นทาง 6 · ผู้ดูแล',
+  7:'เส้นทาง 7 · นักค้นหา',8:'เส้นทาง 8 · ผู้ประสบความสำเร็จ',9:'เส้นทาง 9 · นักมนุษยธรรม',
+  11:'เส้นทาง 11 · แสงสว่าง (Master)',22:'เส้นทาง 22 · สถาปนิก (Master)',33:'เส้นทาง 33 · ครูแห่งความเมตตา (Master)'
+};
+
+const lpC = {
+  1:{1:50,2:40,3:85,4:55,5:80,6:60,7:55,8:45,9:70,11:55,22:60,33:65},
+  2:{1:45,2:70,3:65,4:85,5:40,6:88,7:60,8:80,9:65,11:90,22:75,33:80},
+  3:{1:85,2:65,3:60,4:35,5:88,6:50,7:45,8:55,9:80,11:65,22:40,33:55},
+  4:{1:55,2:85,3:35,4:70,5:30,6:88,7:75,8:82,9:45,11:70,22:90,33:75},
+  5:{1:80,2:40,3:88,4:30,5:65,6:45,7:82,8:50,9:70,11:60,22:35,33:50},
+  6:{1:60,2:88,3:55,4:88,5:50,6:75,7:65,8:72,9:85,11:80,22:85,33:95},
+  7:{1:50,2:60,3:45,4:75,5:82,6:65,7:80,8:40,9:85,11:78,22:55,33:70},
+  8:{1:45,2:80,3:55,4:82,5:50,6:72,7:40,8:60,9:48,11:65,22:85,33:60},
+  9:{1:70,2:65,3:80,4:45,5:70,6:85,7:85,8:48,9:72,11:75,22:50,33:88},
+  11:{1:55,2:90,3:65,4:70,5:60,6:80,7:78,8:65,9:75,11:70,22:88,33:82},
+  22:{1:60,2:75,3:40,4:90,5:35,6:85,7:55,8:85,9:50,11:88,22:72,33:90},
+  33:{1:65,2:80,3:55,4:75,5:50,6:95,7:70,8:60,9:88,11:82,22:90,33:85}
+};
+
+// ── CHINESE ZODIAC ──
+const ranges = [
+  ['1924-02-05','1925-01-23','Rat'],['1925-01-24','1926-02-12','Ox'],
+  ['1926-02-13','1927-02-01','Tiger'],['1927-02-02','1928-01-22','Rabbit'],
+  ['1928-01-23','1929-02-09','Dragon'],['1929-02-10','1930-01-29','Snake'],
+  ['1930-01-30','1931-02-16','Horse'],['1931-02-17','1932-02-05','Goat'],
+  ['1932-02-06','1933-01-25','Monkey'],['1933-01-26','1934-02-13','Rooster'],
+  ['1934-02-14','1935-02-03','Dog'],['1935-02-04','1936-01-23','Pig'],
+  ['1936-01-24','1937-02-10','Rat'],['1937-02-11','1938-01-30','Ox'],
+  ['1938-01-31','1939-02-18','Tiger'],['1939-02-19','1940-02-07','Rabbit'],
+  ['1940-02-08','1941-01-26','Dragon'],['1941-01-27','1942-02-14','Snake'],
+  ['1942-02-15','1943-02-04','Horse'],['1943-02-05','1944-01-24','Goat'],
+  ['1944-01-25','1945-02-12','Monkey'],['1945-02-13','1946-02-01','Rooster'],
+  ['1946-02-02','1947-01-21','Dog'],['1947-01-22','1948-02-09','Pig'],
+  ['1948-02-10','1949-01-28','Rat'],['1949-01-29','1950-02-16','Ox'],
+  ['1950-02-17','1951-02-05','Tiger'],['1951-02-06','1952-01-26','Rabbit'],
+  ['1952-01-27','1953-02-13','Dragon'],['1953-02-14','1954-02-02','Snake'],
+  ['1954-02-03','1955-01-23','Horse'],['1955-01-24','1956-02-11','Goat'],
+  ['1956-02-12','1957-01-30','Monkey'],['1957-01-31','1958-02-17','Rooster'],
+  ['1958-02-18','1959-02-07','Dog'],['1959-02-08','1960-01-27','Pig'],
+  ['1960-01-28','1961-02-14','Rat'],['1961-02-15','1962-02-04','Ox'],
+  ['1962-02-05','1963-01-24','Tiger'],['1963-01-25','1964-02-12','Rabbit'],
+  ['1964-02-13','1965-02-01','Dragon'],['1965-02-02','1966-01-20','Snake'],
+  ['1966-01-21','1967-02-08','Horse'],['1967-02-09','1968-01-29','Goat'],
+  ['1968-01-30','1969-02-16','Monkey'],['1969-02-17','1970-02-05','Rooster'],
+  ['1970-02-06','1971-01-26','Dog'],['1971-01-27','1972-02-14','Pig'],
+  ['1972-02-15','1973-02-02','Rat'],['1973-02-03','1974-01-22','Ox'],
+  ['1974-01-23','1975-02-10','Tiger'],['1975-02-11','1976-01-30','Rabbit'],
+  ['1976-01-31','1977-02-17','Dragon'],['1977-02-18','1978-02-06','Snake'],
+  ['1978-02-07','1979-01-27','Horse'],['1979-01-28','1980-02-15','Goat'],
+  ['1980-02-16','1981-02-04','Monkey'],['1981-02-05','1982-01-24','Rooster'],
+  ['1982-01-25','1983-02-12','Dog'],['1983-02-13','1984-02-01','Pig'],
+  ['1984-02-02','1985-02-19','Rat'],['1985-02-20','1986-02-08','Ox'],
+  ['1986-02-09','1987-01-28','Tiger'],['1987-01-29','1988-02-16','Rabbit'],
+  ['1988-02-17','1989-02-05','Dragon'],['1989-02-06','1990-01-26','Snake'],
+  ['1990-01-27','1991-02-14','Horse'],['1991-02-15','1992-02-03','Goat'],
+  ['1992-02-04','1993-01-22','Monkey'],['1993-01-23','1994-02-09','Rooster'],
+  ['1994-02-10','1995-01-30','Dog'],['1995-01-31','1996-02-18','Pig'],
+  ['1996-02-19','1997-02-06','Rat'],['1997-02-07','1998-01-27','Ox'],
+  ['1998-01-28','1999-02-15','Tiger'],['1999-02-16','2000-02-04','Rabbit'],
+  ['2000-02-05','2001-01-23','Dragon'],['2001-01-24','2002-02-11','Snake'],
+  ['2002-02-12','2003-01-31','Horse'],['2003-02-01','2004-01-21','Goat'],
+  ['2004-01-22','2005-02-08','Monkey'],['2005-02-09','2006-01-28','Rooster'],
+  ['2006-01-29','2007-02-17','Dog'],
+];
+
+const aTH = {Rat:'หนู',Ox:'วัว',Tiger:'เสือ',Rabbit:'กระต่าย',Dragon:'มังกร',
+  Snake:'งู',Horse:'ม้า',Goat:'แพะ',Monkey:'ลิง',Rooster:'ไก่',Dog:'สุนัข',Pig:'หมู'};
+const aEM = {Rat:'🐭',Ox:'🐂',Tiger:'🐯',Rabbit:'🐰',Dragon:'🐲',
+  Snake:'🐍',Horse:'🐴',Goat:'🐑',Monkey:'🐒',Rooster:'🐓',Dog:'🐕',Pig:'🐷'};
+const thaiSec = {
+  Rat:['Rabbit','Horse'],Ox:['Dragon','Dog'],Tiger:['Snake','Pig'],
+  Rabbit:['Horse','Rat'],Dragon:['Goat','Ox'],Snake:['Monkey','Tiger'],
+  Horse:['Rooster','Rabbit'],Goat:['Dragon','Dog'],Monkey:['Pig','Snake'],
+  Rooster:['Rat','Horse'],Dog:['Ox','Goat'],Pig:['Tiger','Monkey']
+};
+const czC = {
+  Rat:   {Rat:72,Ox:95,Tiger:65,Rabbit:68,Dragon:88,Snake:70,Horse:50,Goat:52,Monkey:85,Rooster:68,Dog:45,Pig:48},
+  Ox:    {Rat:95,Ox:70,Tiger:52,Rabbit:65,Dragon:100,Snake:90,Horse:35,Goat:30,Monkey:60,Rooster:88,Dog:100,Pig:58},
+  Tiger: {Rat:65,Ox:52,Tiger:68,Rabbit:70,Dragon:88,Snake:100,Horse:92,Goat:45,Monkey:28,Rooster:48,Dog:80,Pig:100},
+  Rabbit:{Rat:100,Ox:65,Tiger:70,Rabbit:72,Dragon:50,Snake:68,Horse:100,Goat:92,Monkey:42,Rooster:52,Dog:85,Pig:90},
+  Dragon:{Rat:88,Ox:100,Tiger:88,Rabbit:50,Dragon:65,Snake:75,Horse:58,Goat:100,Monkey:92,Rooster:85,Dog:32,Pig:70},
+  Snake: {Rat:70,Ox:90,Tiger:100,Rabbit:68,Dragon:75,Snake:70,Horse:55,Goat:48,Monkey:100,Rooster:88,Dog:55,Pig:65},
+  Horse: {Rat:50,Ox:35,Tiger:92,Rabbit:100,Dragon:58,Snake:55,Horse:68,Goat:88,Monkey:52,Rooster:100,Dog:85,Pig:72},
+  Goat:  {Rat:52,Ox:30,Tiger:45,Rabbit:92,Dragon:100,Snake:48,Horse:88,Goat:70,Monkey:50,Rooster:55,Dog:100,Pig:85},
+  Monkey:{Rat:85,Ox:60,Tiger:28,Rabbit:42,Dragon:92,Snake:100,Horse:52,Goat:50,Monkey:68,Rooster:65,Dog:40,Pig:55},
+  Rooster:{Rat:100,Ox:88,Tiger:48,Rabbit:52,Dragon:85,Snake:88,Horse:100,Goat:55,Monkey:65,Rooster:65,Dog:38,Pig:52},
+  Dog:   {Rat:45,Ox:100,Tiger:80,Rabbit:85,Dragon:32,Snake:55,Horse:85,Goat:100,Monkey:40,Rooster:38,Dog:70,Pig:75},
+  Pig:   {Rat:48,Ox:58,Tiger:100,Rabbit:90,Dragon:70,Snake:65,Horse:72,Goat:85,Monkey:100,Rooster:52,Dog:75,Pig:72}
+};
+
+function getAnimal(d,m,y) {
+  const s = `${y}-${String(m).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+  for (const [st,en,a] of ranges) { if (s>=st && s<=en) return a; }
+  const ord=['Rat','Ox','Tiger','Rabbit','Dragon','Snake','Horse','Goat','Monkey','Rooster','Dog','Pig'];
+  return ord[(y-1900+120)%12];
+}
+
+// ── WESTERN ZODIAC (fixed) ──
+const signs = [
+  {n:'Aries',    th:'ราศีเมษ',     sy:'♈', fm:3,fd:21,tm:4, td:19},
+  {n:'Taurus',   th:'ราศีพฤษภ',   sy:'♉', fm:4,fd:20,tm:5, td:20},
+  {n:'Gemini',   th:'ราศีเมถุน',  sy:'♊', fm:5,fd:21,tm:6, td:20},
+  {n:'Cancer',   th:'ราศีกรกฎ',   sy:'♋', fm:6,fd:21,tm:7, td:22},
+  {n:'Leo',      th:'ราศีสิงห์',  sy:'♌', fm:7,fd:23,tm:8, td:22},
+  {n:'Virgo',    th:'ราศีกันย์',  sy:'♍', fm:8,fd:23,tm:9, td:22},
+  {n:'Libra',    th:'ราศีตุลย์',  sy:'♎', fm:9,fd:23,tm:10,td:22},
+  {n:'Scorpio',  th:'ราศีพิจิก',  sy:'♏', fm:10,fd:23,tm:11,td:21},
+  {n:'Sagittarius',th:'ราศีธนู',  sy:'♐', fm:11,fd:22,tm:12,td:21},
+  {n:'Capricorn',th:'ราศีมกร',    sy:'♑', fm:12,fd:22,tm:1, td:19},
+  {n:'Aquarius', th:'ราศีกุมภ์',  sy:'♒', fm:1, fd:20,tm:2, td:18},
+  {n:'Pisces',   th:'ราศีมีน',    sy:'♓', fm:2, fd:19,tm:3, td:20},
+];
+
+function getSign(d,m) {
+  for (const s of signs) {
+    if (s.fm <= s.tm) {
+      // normal span within same year (no wrapping)
+      if ((m===s.fm && d>=s.fd)||(m===s.tm && d<=s.td)||(m>s.fm && m<s.tm)) return s;
+    } else {
+      // wraps year boundary (Capricorn: Dec 22 – Jan 19)
+      if ((m===s.fm && d>=s.fd)||(m===s.tm && d<=s.td)) return s;
+    }
+  }
+  return signs[0];
+}
+
+const wzC = {
+  Aries:    {Aries:70,Taurus:48,Gemini:85,Cancer:35,Leo:90,Virgo:42,Libra:65,Scorpio:52,Sagittarius:88,Capricorn:38,Aquarius:75,Pisces:50},
+  Taurus:   {Aries:48,Taurus:72,Gemini:50,Cancer:88,Leo:38,Virgo:92,Libra:55,Scorpio:68,Sagittarius:35,Capricorn:90,Aquarius:48,Pisces:70},
+  Gemini:   {Aries:85,Taurus:50,Gemini:68,Cancer:52,Leo:75,Virgo:38,Libra:92,Scorpio:42,Sagittarius:65,Capricorn:35,Aquarius:88,Pisces:45},
+  Cancer:   {Aries:35,Taurus:88,Gemini:52,Cancer:72,Leo:50,Virgo:75,Libra:38,Scorpio:92,Sagittarius:40,Capricorn:65,Aquarius:45,Pisces:90},
+  Leo:      {Aries:90,Taurus:38,Gemini:75,Cancer:50,Leo:70,Virgo:52,Libra:78,Scorpio:35,Sagittarius:88,Capricorn:44,Aquarius:65,Pisces:48},
+  Virgo:    {Aries:42,Taurus:92,Gemini:38,Cancer:75,Leo:52,Virgo:68,Libra:55,Scorpio:72,Sagittarius:32,Capricorn:90,Aquarius:48,Pisces:65},
+  Libra:    {Aries:65,Taurus:45,Gemini:92,Cancer:38,Leo:78,Virgo:55,Libra:70,Scorpio:50,Sagittarius:72,Capricorn:40,Aquarius:88,Pisces:48},
+  Scorpio:  {Aries:38,Taurus:68,Gemini:42,Cancer:92,Leo:35,Virgo:72,Libra:50,Scorpio:68,Sagittarius:52,Capricorn:75,Aquarius:45,Pisces:90},
+  Sagittarius:{Aries:88,Taurus:35,Gemini:65,Cancer:40,Leo:88,Virgo:32,Libra:72,Scorpio:52,Sagittarius:68,Capricorn:50,Aquarius:80,Pisces:48},
+  Capricorn:{Aries:38,Taurus:90,Gemini:35,Cancer:65,Leo:44,Virgo:90,Libra:40,Scorpio:75,Sagittarius:50,Capricorn:68,Aquarius:55,Pisces:65},
+  Aquarius: {Aries:75,Taurus:48,Gemini:88,Cancer:45,Leo:65,Virgo:48,Libra:88,Scorpio:40,Sagittarius:80,Capricorn:55,Aquarius:68,Pisces:50},
+  Pisces:   {Aries:50,Taurus:70,Gemini:45,Cancer:90,Leo:48,Virgo:65,Libra:48,Scorpio:90,Sagittarius:48,Capricorn:65,Aquarius:50,Pisces:68},
+};
+
+// ── VERDICTS ──
+function verdict(s) {
+  if (s>=88) return '"จักรวาลเขียนชื่อคุณไว้ด้วยกัน"';
+  if (s>=80) return '"สองดวงจิตที่ดึงดูดกันด้วยแรงที่มองไม่เห็น"';
+  if (s>=70) return '"มีพื้นฐานที่แข็งแกร่ง ถ้าเลือกจะเติบโตด้วยกัน"';
+  if (s>=60) return '"ต่างคนต่างมีพลังงาน — หาจุดสมดุลได้"';
+  if (s>=50) return '"บทเรียนมากกว่าความง่าย แต่ทุกบทเรียนมีความหมาย"';
+  return '"ความท้าทายคือครูที่ดีที่สุด"';
+}
+
+function reading(lp1,lp2,a1,a2,s1,s2,czS,numS,wzS,isThai) {
+  const hi = Math.max(czS,numS,wzS);
+  let lead = hi===czS
+    ? `นักษัตรของคุณ ${aEM[a1]}${aTH[a1]} กับ ${aEM[a2]}${aTH[a2]} คือแกนหลักของความสัมพันธ์นี้`
+    : hi===numS
+    ? `เลขชีวิต ${lp1} กับ ${lp2} คือสายใยที่ลึกที่สุดในความสัมพันธ์นี้`
+    : `ดาวราศี ${s1.th} กับ ${s2.th} สร้างพลังดึงดูดที่เห็นได้จากภายนอก`;
+  const thaiLine = isThai
+    ? ` และที่พิเศษที่สุด — นักษัตรของคุณทั้งสองคือ "คู่ลับไทย" ตามศาสตร์โบราณ ซึ่งหมายถึงวิญญาณที่มีพันธะข้ามภพ`
+    : '';
+  return `${lead}.${thaiLine} ตัวเลขและดาวบอกแนวโน้ม แต่สิ่งที่คุณเลือกทำทุกวันคือสิ่งที่สร้างความรักที่แท้จริง`;
+}
+
+// ── MAIN ──
+function calculate() {
+  const yd=+document.getElementById('y-d').value,
+        ym=+document.getElementById('y-m').value,
+        yy=+document.getElementById('y-y').value,
+        pd=+document.getElementById('p-d').value,
+        pm=+document.getElementById('p-m').value,
+        py=+document.getElementById('p-y').value;
+
+  const err=document.getElementById('errMsg');
+  if(!yd||!ym||!yy||!pd||!pm||!py){err.classList.add('show');return;}
+  err.classList.remove('show');
+
+  const lp1=lifePath(yd,ym,yy), lp2=lifePath(pd,pm,py);
+  const a1=getAnimal(yd,ym,yy), a2=getAnimal(pd,pm,py);
+  const s1=getSign(yd,ym),      s2=getSign(pd,pm);
+
+  const numS = lpC[lp1]?.[lp2] ?? lpC[lp2]?.[lp1] ?? 55;
+  const czS  = czC[a1]?.[a2] ?? 55;
+  const wzS  = wzC[s1.n]?.[s2.n] ?? 55;
+  const comp = Math.round(numS*0.35 + czS*0.40 + wzS*0.25);
+  const isThai = thaiSec[a1]?.includes(a2)||thaiSec[a2]?.includes(a1);
+
+  // Labels
+  document.getElementById('lblYou').textContent  = `${aEM[a1]} ${s1.th} · LP${lp1}`;
+  document.getElementById('lblThem').textContent = `${aEM[a2]} ${s2.th} · LP${lp2}`;
+
+  // System details
+  document.getElementById('numDet').textContent = `${lpNames[lp1]} + ${lpNames[lp2]}`;
+  document.getElementById('czDet').textContent  = `${aEM[a1]}${aTH[a1]} + ${aEM[a2]}${aTH[a2]}`;
+  document.getElementById('wzDet').textContent  = `${s1.sy}${s1.th} + ${s2.sy}${s2.th}`;
+  document.getElementById('numScr').textContent = numS+'%';
+  document.getElementById('czScr').textContent  = czS+'%';
+  document.getElementById('wzScr').textContent  = wzS+'%';
+
+  document.getElementById('verdict').textContent = verdict(comp);
+
+  // Thai secret
+  const sec1 = thaiSec[a1]?.map(x=>`${aEM[x]}${aTH[x]}`).join(' และ ')||'—';
+  const sec2 = thaiSec[a2]?.map(x=>`${aEM[x]}${aTH[x]}`).join(' และ ')||'—';
+  document.getElementById('thaiBody').innerHTML =
+    `ในศาสตร์โบราณของไทย <strong>${aEM[a1]}${aTH[a1]}</strong> มีคู่ลับคือ ${sec1} — และ <strong>${aEM[a2]}${aTH[a2]}</strong> มีคู่ลับคือ ${sec2}`;
+  document.getElementById('thaiBadge').innerHTML = isThai
+    ? `<div class="match-pill">✦ คุณทั้งสองเป็น "คู่ลับไทย" ของกันและกัน</div>`
+    : `<div class="no-match-pill">นักษัตรของคุณไม่ใช่คู่ลับไทยโดยตรง แต่ยังมีสองระบบอื่นที่เชื่อมคุณไว้</div>`;
+
+  document.getElementById('readingTxt').textContent = reading(lp1,lp2,a1,a2,s1,s2,czS,numS,wzS,isThai);
+
+  // Show
+  const sec = document.getElementById('resultSec');
+  sec.classList.add('on');
+  sec.scrollIntoView({behavior:'smooth',block:'start'});
+
+  // Animate ring
+  const circ = 2*Math.PI*64;
+  const fill = document.getElementById('ringFill');
+  fill.style.strokeDasharray = circ;
+  fill.style.strokeDashoffset = circ;
+  setTimeout(()=>{ fill.style.strokeDashoffset = circ*(1-comp/100); },80);
+
+  // Count up
+  const el = document.getElementById('ringNum');
+  let cur=0; const step=comp/60;
+  const iv=setInterval(()=>{
+    cur=Math.min(cur+step,comp);
+    el.textContent=Math.round(cur);
+    if(cur>=comp) clearInterval(iv);
+  },16);
+
+  // Bars
+  setTimeout(()=>{
+    document.getElementById('numBar').style.width = numS+'%';
+    document.getElementById('czBar').style.width  = czS+'%';
+    document.getElementById('wzBar').style.width  = wzS+'%';
+  },180);
+}
+
+function doReset() {
+  document.getElementById('resultSec').classList.remove('on');
+  ['y-d','y-m','y-y','p-d','p-m','p-y'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('formSection').scrollIntoView({behavior:'smooth'});
+}
+</script>
+</body>
+</html>
