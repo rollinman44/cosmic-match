@@ -4,8 +4,75 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Cosmic Match Finder Thailand</title>
-<link href="https://fonts.googleapis.com/css2?family=Prompt:ital,wght@0,200;0,300;0,400;0,500;1,200;1,300&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
 <style>
+/* Prompt font — served directly from GitHub Pages repo */
+@font-face {
+  font-family: 'Prompt';
+  src: url('https://rollinman44.github.io/cosmic-match/Prompt-Thin.ttf') format('truetype');
+  font-weight: 100;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Prompt';
+  src: url('https://rollinman44.github.io/cosmic-match/Prompt-ThinItalic.ttf') format('truetype');
+  font-weight: 100;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Prompt';
+  src: url('https://rollinman44.github.io/cosmic-match/Prompt-Light.ttf') format('truetype');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Prompt';
+  src: url('https://rollinman44.github.io/cosmic-match/Prompt-LightItalic.ttf') format('truetype');
+  font-weight: 300;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Prompt';
+  src: url('https://rollinman44.github.io/cosmic-match/Prompt-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Prompt';
+  src: url('https://rollinman44.github.io/cosmic-match/Prompt-Italic.ttf') format('truetype');
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Prompt';
+  src: url('https://rollinman44.github.io/cosmic-match/Prompt-Medium.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Prompt';
+  src: url('https://rollinman44.github.io/cosmic-match/Prompt-MediumItalic.ttf') format('truetype');
+  font-weight: 500;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Prompt';
+  src: url('https://rollinman44.github.io/cosmic-match/Prompt-SemiBold.ttf') format('truetype');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
@@ -55,10 +122,10 @@ body {
   inset: 0;
   background:
     linear-gradient(to bottom,
-      rgba(250,247,242,0) 0%,
-      rgba(250,247,242,0.15) 50%,
-      rgba(250,247,242,0.92) 82%,
-      rgba(250,247,242,1) 100%
+      rgba(250,247,242,0.55) 0%,
+      rgba(250,247,242,0.45) 40%,
+      rgba(250,247,242,0.82) 72%,
+      rgba(250,247,242,1.00) 100%
     ),
     url('https://images.unsplash.com/photo-1529634597503-139d3726fed5?w=1600&q=85&fit=crop&crop=faces') center 30%/cover no-repeat;
   z-index: 0;
@@ -86,6 +153,7 @@ body {
   line-height: 1.1;
   color: var(--ink);
   margin-bottom: 8px;
+  text-shadow: 0 1px 12px rgba(250,247,242,0.9), 0 0 32px rgba(250,247,242,0.7);
 }
 
 .hero-title em {
@@ -99,6 +167,7 @@ body {
   color: var(--mist);
   line-height: 1.75;
   margin-bottom: 36px;
+  text-shadow: 0 1px 8px rgba(250,247,242,0.95);
 }
 
 .scroll-cta {
@@ -664,7 +733,7 @@ body {
 }
 </style>
 </head>
-<body>
+<body spellcheck="false">
 
 <!-- ── HERO ── -->
 <section class="hero">
