@@ -1,0 +1,910 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ผลดวงคู่รัก · อับดุลเอ้ย ถามดวงดาวให้หน่อย</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Prompt:ital,wght@0,100;0,200;0,300;0,400;0,500;1,300&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+@font-face { font-family:'Prompt'; src:url('Prompt-Light.ttf') format('truetype'); font-weight:300; font-style:normal; font-display:swap; }
+@font-face { font-family:'Prompt'; src:url('Prompt-Regular.ttf') format('truetype'); font-weight:400; font-style:normal; font-display:swap; }
+@font-face { font-family:'Prompt'; src:url('Prompt-Medium.ttf') format('truetype'); font-weight:500; font-style:normal; font-display:swap; }
+
+:root {
+  --ink:     #1c1812;
+  --gold:    #b8862a;
+  --gold2:   #d4a843;
+  --gold-lt: #f0dca8;
+  --warm:    #faf7f2;
+  --parch:   #f5f0e8;
+  --stone:   #e4ddd2;
+  --mist:    #8a7e6e;
+  --fog:     #b8ad9e;
+  --white:   #ffffff;
+  --thai:    #8b2060;
+  --thai-lt: #f5e8f0;
+  --red-chi: #9b2020;
+  --sky:     #1e4a78;
+  --green:   #2e7d52;
+  --green-lt:#e8f5ee;
+  --amber:   #c47a1a;
+  --amber-lt:#fdf3e3;
+}
+
+html { scroll-behavior: smooth; }
+body {
+  background: var(--warm);
+  color: var(--ink);
+  font-family: 'Prompt', 'Sarabun', sans-serif;
+  font-weight: 300;
+  min-height: 100vh;
+}
+
+/* ══ NAV ══ */
+.topnav {
+  background: var(--white);
+  border-bottom: 1px solid var(--stone);
+  padding: 14px 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.nav-brand {
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: .12em;
+  color: var(--gold);
+}
+.nav-back {
+  font-size: 11px;
+  font-weight: 300;
+  color: var(--mist);
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: color .2s;
+}
+.nav-back:hover { color: var(--gold); }
+
+/* ══ HERO RESULT ══ */
+.result-hero {
+  background: var(--parch);
+  padding: 52px 24px 48px;
+  text-align: center;
+  border-bottom: 1px solid var(--stone);
+  position: relative;
+  overflow: hidden;
+}
+
+.result-hero::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--thai), var(--gold2), var(--thai));
+}
+
+.rh-eye {
+  font-size: 9px;
+  letter-spacing: .24em;
+  text-transform: uppercase;
+  color: var(--fog);
+  display: block;
+  margin-bottom: 16px;
+}
+
+.pair-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-bottom: 6px;
+}
+
+.pair-you  { font-family:'Prompt','Sarabun',sans-serif; font-size:clamp(13px,2vw,17px); font-weight:400; color:var(--gold); }
+.pair-sep  { font-size:16px; color:var(--stone); }
+.pair-them { font-family:'Prompt','Sarabun',sans-serif; font-size:clamp(13px,2vw,17px); font-weight:400; color:var(--thai); }
+.pair-sub  { font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:var(--fog); margin-bottom:36px; display:block; }
+
+/* Score ring */
+.ring-wrap {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+.ring-svg { position:relative; width:160px; height:160px; }
+.ring-svg svg { width:100%; height:100%; transform:rotate(-90deg); }
+.ring-track { fill:none; stroke:var(--stone); stroke-width:8; }
+.ring-fill  { fill:none; stroke:var(--gold2); stroke-width:8; stroke-linecap:round;
+              stroke-dasharray:408; stroke-dashoffset:408;
+              transition:stroke-dashoffset 1.6s cubic-bezier(.35,0,.2,1); }
+.ring-inner { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+.ring-num   { font-family:'Cormorant Garamond','Georgia',serif; font-size:52px; font-weight:600; color:var(--gold); line-height:1; }
+.ring-pct   { font-size:14px; color:var(--fog); }
+.ring-lbl   { font-size:9px; letter-spacing:.18em; text-transform:uppercase; color:var(--fog); }
+
+/* Ranking badge */
+.rank-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 22px;
+  border-radius: 24px;
+  font-size: 14px;
+  font-weight: 400;
+  margin-bottom: 14px;
+  border: 1.5px solid;
+}
+.rank-ultra  { background:#fff8e8; border-color:#d4a843; color:#8a6010; }
+.rank-excel  { background:#e8f5ee; border-color:#2e7d52; color:#1a5c38; }
+.rank-vgood  { background:#e8eff8; border-color:#1e4a78; color:#0f2e52; }
+.rank-good   { background:#f5f0e8; border-color:#b8ad9e; color:#5a4e3e; }
+.rank-growth { background:#fdf0f0; border-color:#c08080; color:#7a3030; }
+
+.rank-desc {
+  font-size: 12px;
+  font-weight: 300;
+  color: var(--mist);
+  max-width: 480px;
+  margin: 0 auto;
+  line-height: 1.7;
+}
+
+/* ══ CONTENT ══ */
+.content { max-width: 800px; margin: 0 auto; padding: 0 20px 80px; }
+
+/* Section headers */
+.sec-block {
+  margin-top: 40px;
+}
+
+.sec-label {
+  font-size: 9px;
+  font-weight: 400;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--fog);
+  margin-bottom: 6px;
+  display: block;
+}
+
+.sec-title {
+  font-family: 'Prompt', 'Sarabun', sans-serif;
+  font-size: 18px;
+  font-weight: 400;
+  color: var(--ink);
+  margin-bottom: 16px;
+}
+
+/* Why score — 3 system cards */
+.sys-grid {
+  display: grid;
+  grid-template-columns: repeat(3,1fr);
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.sys-card {
+  background: var(--white);
+  border: 1px solid var(--stone);
+  border-radius: 8px;
+  padding: 18px 14px 16px;
+  text-align: center;
+  position: relative;
+}
+
+.sys-card::before {
+  content:''; position:absolute; top:0;left:0;right:0; height:3px; border-radius:8px 8px 0 0;
+}
+.sys-card.num::before { background:linear-gradient(90deg,var(--gold),var(--gold2)); }
+.sys-card.cz::before  { background:linear-gradient(90deg,var(--red-chi),#e8705f); }
+.sys-card.wz::before  { background:linear-gradient(90deg,var(--sky),#6a8ec4); }
+
+.sys-icon  { font-size:22px; margin-bottom:6px; }
+.sys-lbl   { font-size:8px; letter-spacing:.14em; text-transform:uppercase; color:var(--fog); margin-bottom:6px; display:block; }
+.sys-names { font-size:11px; font-weight:300; color:var(--mist); line-height:1.5; margin-bottom:10px; min-height:32px; }
+.sys-bar-w { height:4px; background:var(--stone); border-radius:2px; overflow:hidden; margin-bottom:6px; }
+.sys-bar   { height:100%; border-radius:2px; width:0; transition:width 1.4s ease; }
+.sys-pct   { font-family:'Cormorant Garamond','Georgia',serif; font-size:24px; font-weight:600; }
+.sys-card.num .sys-pct { color:var(--gold); }
+.sys-card.cz  .sys-pct { color:var(--red-chi); }
+.sys-card.wz  .sys-pct { color:var(--sky); }
+
+.sys-link {
+  display: block;
+  font-size: 10px;
+  color: var(--gold);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  margin-top: 6px;
+}
+
+/* Score formula */
+.formula-box {
+  background: var(--parch);
+  border: 1px solid var(--stone);
+  border-radius: 8px;
+  padding: 16px 20px;
+  text-align: center;
+  font-size: 12px;
+  font-weight: 300;
+  color: var(--mist);
+  line-height: 1.7;
+  margin-top: 12px;
+}
+.formula-box strong { color: var(--ink); font-weight: 400; }
+
+/* Thai secret */
+.thai-blk {
+  background: var(--white);
+  border: 1px solid #e0c8d8;
+  border-radius: 8px;
+  padding: 24px 22px 20px;
+  position: relative;
+  overflow: hidden;
+}
+.thai-blk::before {
+  content:''; position:absolute; top:0;left:0;right:0; height:3px;
+  background:linear-gradient(90deg,var(--thai),#d490b8,var(--gold2));
+  border-radius:8px 8px 0 0;
+}
+.thai-eye   { font-size:9px; letter-spacing:.2em; text-transform:uppercase; color:var(--thai); margin-bottom:6px; opacity:.8; display:block; }
+.thai-ttl   { font-size:17px; font-weight:400; color:var(--ink); margin-bottom:8px; }
+.thai-ttl em { font-style:normal; color:var(--thai); }
+.thai-body  { font-size:13px; font-weight:300; color:var(--mist); line-height:1.75; margin-bottom:12px; }
+.thai-body strong { color:var(--ink); font-weight:400; }
+
+.match-pill {
+  display:inline-flex; align-items:center; gap:6px;
+  padding:6px 14px; background:var(--thai-lt); border:1px solid #e0c0d4;
+  border-radius:20px; font-size:12px; color:var(--thai); font-weight:300;
+}
+.no-match-pill {
+  display:inline-flex; align-items:center; gap:6px;
+  padding:6px 14px; background:var(--parch); border:1px solid var(--stone);
+  border-radius:20px; font-size:12px; color:var(--fog);
+}
+
+/* Strengths / Challenges */
+.pro-con-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.pro-box, .con-box {
+  background: var(--white);
+  border: 1px solid var(--stone);
+  border-radius: 8px;
+  padding: 20px 18px;
+}
+
+.pro-box { border-top: 3px solid var(--green); }
+.con-box { border-top: 3px solid var(--amber); }
+
+.box-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 400;
+  margin-bottom: 14px;
+}
+
+.pro-box .box-head { color: var(--green); }
+.con-box .box-head { color: var(--amber); }
+
+.box-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.box-list li {
+  font-size: 13px;
+  font-weight: 300;
+  color: var(--mist);
+  line-height: 1.6;
+  padding-left: 16px;
+  position: relative;
+}
+
+.box-list li::before {
+  content: '·';
+  position: absolute;
+  left: 0;
+  color: var(--fog);
+}
+
+/* Tips */
+.tips-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.tip-card {
+  background: var(--white);
+  border: 1px solid var(--stone);
+  border-radius: 8px;
+  padding: 18px 16px;
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.tip-icon { font-size: 20px; flex-shrink: 0; margin-top: 1px; }
+
+.tip-text {
+  font-size: 13px;
+  font-weight: 300;
+  color: var(--mist);
+  line-height: 1.65;
+}
+
+.tip-text strong {
+  display: block;
+  font-weight: 400;
+  color: var(--ink);
+  margin-bottom: 3px;
+  font-size: 13px;
+}
+
+/* Ranking explanation */
+.rank-table {
+  background: var(--white);
+  border: 1px solid var(--stone);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.rank-row {
+  display: grid;
+  grid-template-columns: 120px 80px 1fr;
+  align-items: center;
+  padding: 12px 18px;
+  border-bottom: 1px solid var(--stone);
+  gap: 12px;
+}
+
+.rank-row:last-child { border-bottom: none; }
+.rank-row.header { background: var(--parch); }
+
+.rank-row.header span { font-size: 9px; letter-spacing:.14em; text-transform:uppercase; color:var(--fog); font-weight:400; }
+
+.rank-name { font-size:13px; font-weight:400; color:var(--ink); }
+.rank-pct  { font-size:13px; font-weight:300; color:var(--mist); }
+.rank-meaning { font-size:12px; font-weight:300; color:var(--mist); line-height:1.5; }
+
+.rank-dot {
+  display: inline-block;
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  margin-right: 6px;
+  flex-shrink: 0;
+}
+
+/* Closing */
+.closing-blk {
+  background: var(--ink);
+  border-radius: 8px;
+  padding: 32px 28px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.closing-blk::before {
+  content:''; position:absolute; top:0;left:0;right:0; height:3px;
+  background:linear-gradient(90deg,var(--thai),var(--gold2),var(--thai));
+}
+
+.closing-eye { font-size:9px; letter-spacing:.22em; text-transform:uppercase; color:var(--gold2); opacity:.7; display:block; margin-bottom:12px; }
+.closing-txt {
+  font-family:'Prompt','Sarabun',sans-serif;
+  font-size:clamp(14px,2vw,17px);
+  font-weight:300;
+  color:rgba(255,255,255,.8);
+  line-height:1.9;
+  max-width:520px;
+  margin: 0 auto 20px;
+}
+.closing-txt strong { color:var(--gold-lt); font-weight:400; }
+
+/* Share card */
+.share-blk {
+  background: var(--white);
+  border: 1px solid var(--stone);
+  border-radius: 8px;
+  padding: 24px 22px;
+  text-align: center;
+}
+
+.share-title { font-size:15px; font-weight:400; color:var(--ink); margin-bottom:6px; }
+.share-sub   { font-size:12px; font-weight:300; color:var(--mist); margin-bottom:18px; }
+
+.share-card-preview {
+  background: linear-gradient(135deg, var(--parch) 0%, #fff 100%);
+  border: 1px solid var(--stone);
+  border-radius: 8px;
+  padding: 24px;
+  margin-bottom: 18px;
+  position: relative;
+  overflow: hidden;
+}
+
+.share-card-preview::before {
+  content:''; position:absolute; top:0;left:0;right:0; height:3px;
+  background:linear-gradient(90deg,var(--thai),var(--gold2));
+}
+
+.sc-brand  { font-size:9px; letter-spacing:.2em; text-transform:uppercase; color:var(--fog); margin-bottom:12px; display:block; }
+.sc-pair   { font-size:16px; font-weight:400; color:var(--ink); margin-bottom:6px; }
+.sc-score  { font-family:'Cormorant Garamond','Georgia',serif; font-size:48px; font-weight:600; color:var(--gold); line-height:1; margin-bottom:4px; }
+.sc-rank   { font-size:13px; font-weight:300; color:var(--mist); margin-bottom:14px; }
+.sc-systems { display:flex; justify-content:center; gap:20px; }
+.sc-sys    { text-align:center; }
+.sc-sys-lbl { font-size:9px; letter-spacing:.12em; text-transform:uppercase; color:var(--fog); display:block; }
+.sc-sys-val { font-size:16px; font-weight:400; color:var(--ink); }
+.sc-footer  { font-size:9px; color:var(--fog); margin-top:14px; letter-spacing:.1em; }
+
+.btn-share {
+  display: inline-flex; align-items:center; gap:8px;
+  padding: 12px 32px;
+  background: var(--ink);
+  color: var(--gold-lt);
+  border-radius:6px;
+  font-family:'Prompt','Sarabun',sans-serif;
+  font-size:12px; font-weight:400; letter-spacing:.12em; text-transform:uppercase;
+  border:none; cursor:pointer; transition:background .2s;
+  text-decoration:none;
+}
+.btn-share:hover { background:var(--gold); color:var(--ink); }
+
+/* Action buttons */
+.action-row {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 40px;
+}
+
+.btn-back {
+  display:inline-flex; align-items:center; gap:8px;
+  padding:12px 28px;
+  background:transparent; border:1px solid var(--stone); border-radius:6px;
+  font-family:'Prompt','Sarabun',sans-serif;
+  font-size:11px; font-weight:300; letter-spacing:.12em; text-transform:uppercase;
+  color:var(--mist); cursor:pointer; text-decoration:none; transition:all .2s;
+}
+.btn-back:hover { border-color:var(--gold2); color:var(--gold); }
+
+/* Subscribe */
+.subscribe-sec {
+  background: var(--ink);
+  padding: 52px 24px;
+  text-align: center;
+}
+.subscribe-inner { max-width:480px; margin:0 auto; }
+.sub-eye   { font-size:9px; letter-spacing:.24em; text-transform:uppercase; color:var(--gold2); display:block; margin-bottom:12px; opacity:.8; }
+.sub-title { font-size:clamp(18px,3vw,24px); font-weight:300; color:#fff; margin-bottom:10px; }
+.sub-desc  { font-size:13px; font-weight:300; color:rgba(255,255,255,.5); line-height:1.75; margin-bottom:24px; }
+.btn-sub   {
+  display:inline-flex; align-items:center; gap:8px;
+  padding:13px 36px; background:var(--gold); color:var(--ink);
+  border-radius:6px; font-family:'Prompt','Sarabun',sans-serif;
+  font-size:12px; font-weight:400; letter-spacing:.12em; text-transform:uppercase;
+  text-decoration:none; transition:background .2s;
+}
+.btn-sub:hover { background:var(--gold2); }
+
+/* Footer */
+.site-footer { background:var(--white); border-top:1px solid var(--stone); text-align:center; padding:22px 24px; }
+.footer-txt  { font-size:11px; font-weight:300; color:var(--fog); letter-spacing:.08em; }
+
+/* Mobile */
+@media (max-width:640px) {
+  .sys-grid    { grid-template-columns:1fr; }
+  .pro-con-grid { grid-template-columns:1fr; }
+  .tips-grid   { grid-template-columns:1fr; }
+  .rank-row    { grid-template-columns:1fr 60px; }
+  .rank-meaning { display:none; }
+  .closing-blk { padding:24px 18px; }
+  .share-card-preview { padding:18px 14px; }
+  .sc-systems  { gap:12px; }
+}
+</style>
+</head>
+<body spellcheck="false">
+
+<!-- NAV -->
+<nav class="topnav">
+  <span class="nav-brand">อับดุลเอ้ย ถามดวงดาวให้หน่อย</span>
+  <a class="nav-back" href="checker.html">← คำนวณใหม่</a>
+</nav>
+
+<!-- RESULT HERO -->
+<section class="result-hero">
+  <span class="rh-eye">ผลดวงคู่รัก · ไตรศาสตร์คู่รัก by Abdul Thailand</span>
+  <div class="pair-row">
+    <span class="pair-you"  id="lblYou">—</span>
+    <span class="pair-sep">✦</span>
+    <span class="pair-them" id="lblThem">—</span>
+  </div>
+  <span class="pair-sub" id="lblSub">—</span>
+
+  <div class="ring-wrap">
+    <div class="ring-svg">
+      <svg viewBox="0 0 140 140">
+        <circle class="ring-track" cx="70" cy="70" r="65"/>
+        <circle class="ring-fill" id="ringFill" cx="70" cy="70" r="65"/>
+      </svg>
+      <div class="ring-inner">
+        <span class="ring-num" id="ringNum">0</span>
+        <span class="ring-pct">%</span>
+      </div>
+    </div>
+    <span class="ring-lbl">ความเข้ากันโดยรวม</span>
+  </div>
+
+  <div id="rankBadge" class="rank-badge rank-good">—</div>
+  <p class="rank-desc" id="rankDesc">—</p>
+</section>
+
+<!-- CONTENT -->
+<div class="content">
+
+  <!-- WHY THIS SCORE -->
+  <div class="sec-block">
+    <span class="sec-label">✦ ทำไมถึงได้คะแนนนี้?</span>
+    <div class="sec-title">3 ศาสตร์ที่บอกว่าคุณเข้ากันแค่ไหน</div>
+
+    <div class="sys-grid">
+      <div class="sys-card num">
+        <div class="sys-icon">🔢</div>
+        <span class="sys-lbl">เลขศาสตร์ · 35%</span>
+        <div class="sys-names" id="numNames">—</div>
+        <div class="sys-bar-w"><div class="sys-bar" id="numBar" style="background:linear-gradient(90deg,#b8862a,#d4a843)"></div></div>
+        <div class="sys-pct" id="numPct">—</div>
+        <a class="sys-link" href="faq.html#numerology">เรียนรู้เพิ่มเติม →</a>
+      </div>
+      <div class="sys-card cz">
+        <div class="sys-icon">🏮</div>
+        <span class="sys-lbl">นักษัตรจีน · 40%</span>
+        <div class="sys-names" id="czNames">—</div>
+        <div class="sys-bar-w"><div class="sys-bar" id="czBar" style="background:linear-gradient(90deg,#9b2020,#e8705f)"></div></div>
+        <div class="sys-pct" id="czPct">—</div>
+        <a class="sys-link" href="faq.html#chinese-zodiac">เรียนรู้เพิ่มเติม →</a>
+      </div>
+      <div class="sys-card wz">
+        <div class="sys-icon">⭐</div>
+        <span class="sys-lbl">จักรราศีตะวันตก · 25%</span>
+        <div class="sys-names" id="wzNames">—</div>
+        <div class="sys-bar-w"><div class="sys-bar" id="wzBar" style="background:linear-gradient(90deg,#1e4a78,#6a8ec4)"></div></div>
+        <div class="sys-pct" id="wzPct">—</div>
+        <a class="sys-link" href="faq.html#western-zodiac">เรียนรู้เพิ่มเติม →</a>
+      </div>
+    </div>
+
+    <div class="formula-box">
+      คะแนนรวม = <strong>เลขศาสตร์ (35%)</strong> + <strong>นักษัตรจีน (40%)</strong> + <strong>จักรราศีตะวันตก (25%)</strong><br>
+      นักษัตรจีนมีน้ำหนักสูงสุดเพราะสะท้อนบุคลิกและพลังงานชีวิตได้ลึกที่สุดในไตรศาสตร์นี้
+    </div>
+  </div>
+
+  <!-- THAI SECRET -->
+  <div class="sec-block">
+    <span class="sec-label">✦ ศาสตร์โบราณของไทย</span>
+    <div class="thai-blk">
+      <span class="thai-eye">คู่ลับไทย — พิเศษเฉพาะที่นี่</span>
+      <div class="thai-ttl">คู่ลับ<em>ไทย</em></div>
+      <div class="thai-body" id="thaiBody">—</div>
+      <div id="thaiBadge"></div>
+    </div>
+  </div>
+
+  <!-- STRENGTHS -->
+  <div class="sec-block">
+    <span class="sec-label">✦ จุดแข็งของความสัมพันธ์</span>
+    <div class="sec-title">สิ่งที่คุณทั้งสองทำได้ดีด้วยกัน</div>
+    <div class="pro-con-grid">
+      <div class="pro-box">
+        <div class="box-head">💚 จุดแข็ง</div>
+        <ul class="box-list" id="proList">—</ul>
+      </div>
+      <div class="con-box">
+        <div class="box-head">🔶 ความท้าทาย</div>
+        <ul class="box-list" id="conList">—</ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- TIPS -->
+  <div class="sec-block">
+    <span class="sec-label">✦ วิธีพัฒนาความสัมพันธ์</span>
+    <div class="sec-title">เคล็ดลับที่ใช้ได้จริงสำหรับคุณทั้งสอง</div>
+    <div class="tips-grid" id="tipsGrid">—</div>
+  </div>
+
+  <!-- RANKING EXPLANATION -->
+  <div class="sec-block">
+    <span class="sec-label">✦ ระดับความเข้ากัน</span>
+    <div class="sec-title">แต่ละระดับหมายความว่าอะไร?</div>
+    <div class="rank-table">
+      <div class="rank-row header">
+        <span>ระดับ</span><span>คะแนน</span><span>ความหมาย</span>
+      </div>
+      <div class="rank-row">
+        <div class="rank-name"><span class="rank-dot" style="background:#d4a843"></span>หายากมาก</div>
+        <div class="rank-pct">90–96%</div>
+        <div class="rank-meaning">พลังงานทั้งสามระบบสอดคล้องกันอย่างหายาก เกิดขึ้นเพียง 1 ใน 69 คู่</div>
+      </div>
+      <div class="rank-row">
+        <div class="rank-name"><span class="rank-dot" style="background:#2e7d52"></span>ดีเยี่ยม</div>
+        <div class="rank-pct">80–89%</div>
+        <div class="rank-meaning">ความเข้ากันในระดับสูง มีพื้นฐานแข็งแกร่งสำหรับความสัมพันธ์ระยะยาว</div>
+      </div>
+      <div class="rank-row">
+        <div class="rank-name"><span class="rank-dot" style="background:#1e4a78"></span>ดีมาก</div>
+        <div class="rank-pct">60–79%</div>
+        <div class="rank-meaning">เข้ากันได้ดี มีทั้งจุดแข็งและพื้นที่ที่ต้องเข้าใจกันมากขึ้น</div>
+      </div>
+      <div class="rank-row">
+        <div class="rank-name"><span class="rank-dot" style="background:#b8ad9e"></span>ดี</div>
+        <div class="rank-pct">40–59%</div>
+        <div class="rank-meaning">บุคลิกที่แตกต่างกัน แต่ความแตกต่างนั้นเองที่ทำให้เติบโตได้</div>
+      </div>
+      <div class="rank-row">
+        <div class="rank-name"><span class="rank-dot" style="background:#c08080"></span>โอกาสเติบโต</div>
+        <div class="rank-pct">ต่ำกว่า 40%</div>
+        <div class="rank-meaning">พลังงานต่างขั้ว ต้องใช้ความเข้าใจและการสื่อสารมากเป็นพิเศษ</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CLOSING -->
+  <div class="sec-block">
+    <div class="closing-blk">
+      <span class="closing-eye">✦ จากอับดุล</span>
+      <p class="closing-txt" id="closingTxt">—</p>
+    </div>
+  </div>
+
+  <!-- SHARE CARD -->
+  <div class="sec-block">
+    <span class="sec-label">✦ แชร์ผลลัพธ์</span>
+    <div class="share-blk">
+      <div class="share-title">แชร์ดวงคู่ของคุณ</div>
+      <p class="share-sub">บันทึกภาพด้านล่างแล้วแชร์บน Facebook หรือ LINE ได้เลย</p>
+      <div class="share-card-preview" id="shareCard">
+        <span class="sc-brand">อับดุลเอ้ย ถามดวงดาวให้หน่อย · ไตรศาสตร์คู่รัก by Abdul Thailand</span>
+        <div class="sc-pair" id="scPair">—</div>
+        <div class="sc-score" id="scScore">0</div>
+        <div class="sc-rank"  id="scRank">—</div>
+        <div class="sc-systems">
+          <div class="sc-sys">
+            <span class="sc-sys-lbl">เลขศาสตร์</span>
+            <span class="sc-sys-val" id="scNum">—</span>
+          </div>
+          <div class="sc-sys">
+            <span class="sc-sys-lbl">นักษัตร</span>
+            <span class="sc-sys-val" id="scCz">—</span>
+          </div>
+          <div class="sc-sys">
+            <span class="sc-sys-lbl">จักรราศี</span>
+            <span class="sc-sys-val" id="scWz">—</span>
+          </div>
+        </div>
+        <div class="sc-footer">rollinman44.github.io/cosmic-match/checker.html</div>
+      </div>
+      <button class="btn-share" onclick="shareResult()">📤 &nbsp;คัดลอกลิงก์ผลลัพธ์</button>
+    </div>
+  </div>
+
+  <!-- ACTIONS -->
+  <div class="action-row">
+    <a class="btn-back" href="checker.html">← คำนวณใหม่</a>
+    <a class="btn-back" href="faq.html">อ่านเรียนรู้ไตรศาสตร์ →</a>
+  </div>
+
+</div><!-- /content -->
+
+<!-- SUBSCRIBE -->
+<section class="subscribe-sec">
+  <div class="subscribe-inner">
+    <span class="sub-eye">✦ พรีเมียม</span>
+    <div class="sub-title">อยากรู้ลึกกว่านี้?</div>
+    <p class="sub-desc">สมัคร Premium เพื่อรับการวิเคราะห์ดวงคู่แบบละเอียด รายงานส่วนตัว และคำแนะนำจากอับดุลโดยตรง</p>
+    <a class="btn-sub" href="member.html">✦ &nbsp;สมัคร Premium</a>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <p class="footer-txt">Cosmic Match Finder Thailand · ไตรศาสตร์คู่รัก by Abdul Thailand</p>
+</footer>
+
+<script>
+// ── DATA TABLES ──
+const lpN={1:'เส้นทาง 1 · ผู้นำ',2:'เส้นทาง 2 · ผู้สร้างสันติ',3:'เส้นทาง 3 · ผู้สร้างสรรค์',4:'เส้นทาง 4 · ผู้สร้างรากฐาน',5:'เส้นทาง 5 · ผู้แสวงหา',6:'เส้นทาง 6 · ผู้ดูแล',7:'เส้นทาง 7 · นักค้นหา',8:'เส้นทาง 8 · ผู้ประสบความสำเร็จ',9:'เส้นทาง 9 · นักมนุษยธรรม',11:'เส้นทาง 11 · แสงสว่าง (Master)',22:'เส้นทาง 22 · สถาปนิก (Master)',33:'เส้นทาง 33 · ครูแห่งความเมตตา (Master)'};
+const aTH={Rat:'หนู',Ox:'วัว',Tiger:'เสือ',Rabbit:'กระต่าย',Dragon:'มังกร',Snake:'งู',Horse:'ม้า',Goat:'แพะ',Monkey:'ลิง',Rooster:'ไก่',Dog:'สุนัข',Pig:'หมู'};
+const aEM={Rat:'🐭',Ox:'🐂',Tiger:'🐯',Rabbit:'🐰',Dragon:'🐲',Snake:'🐍',Horse:'🐴',Goat:'🐑',Monkey:'🐒',Rooster:'🐓',Dog:'🐕',Pig:'🐷'};
+const sEM={Aries:'♈',Taurus:'♉',Gemini:'♊',Cancer:'♋',Leo:'♌',Virgo:'♍',Libra:'♎',Scorpio:'♏',Sagittarius:'♐',Capricorn:'♑',Aquarius:'♒',Pisces:'♓'};
+const sTH={Aries:'ราศีเมษ',Taurus:'ราศีพฤษภ',Gemini:'ราศีเมถุน',Cancer:'ราศีกรกฎ',Leo:'ราศีสิงห์',Virgo:'ราศีกันย์',Libra:'ราศีตุลย์',Scorpio:'ราศีพิจิก',Sagittarius:'ราศีธนู',Capricorn:'ราศีมกร',Aquarius:'ราศีกุมภ์',Pisces:'ราศีมีน'};
+const thaiSec={Rat:['Rabbit','Horse'],Ox:['Dragon','Dog'],Tiger:['Snake','Pig'],Rabbit:['Horse','Rat'],Dragon:['Goat','Ox'],Snake:['Monkey','Tiger'],Horse:['Rooster','Rabbit'],Goat:['Dragon','Dog'],Monkey:['Pig','Snake'],Rooster:['Rat','Horse'],Dog:['Ox','Goat'],Pig:['Tiger','Monkey']};
+
+// ── RANKING ──
+function getRank(score) {
+  if (score >= 90) return { cls:'rank-ultra',  label:'✨ หายากมาก · Ultra Rare',    desc:'พลังงานทั้ง 3 ระบบสอดคล้องกันอย่างหายากมาก คู่แบบนี้เกิดขึ้นเพียง 1 ใน 69 คู่เท่านั้น ดูแลและรักษาสิ่งที่มีอยู่ไว้ให้ดี' };
+  if (score >= 80) return { cls:'rank-excel',  label:'💚 ดีเยี่ยม · Excellent',      desc:'ความเข้ากันในระดับสูง ทั้งสองคนมีพลังงานที่เสริมกันได้ดี มีพื้นฐานที่แข็งแกร่งสำหรับความสัมพันธ์ระยะยาว' };
+  if (score >= 60) return { cls:'rank-vgood',  label:'💙 ดีมาก · Very Good',         desc:'เข้ากันได้ดีในหลายด้าน มีทั้งจุดที่เสริมกันและจุดที่ต้องเรียนรู้จากกัน ซึ่งทำให้ความสัมพันธ์น่าสนใจและเติบโตได้' };
+  if (score >= 40) return { cls:'rank-good',   label:'🤝 ดี · Good Potential',       desc:'บุคลิกที่แตกต่างกัน แต่ความแตกต่างนั้นเองที่ทำให้ทั้งสองเติบโตได้ ต้องใช้การสื่อสารและความเข้าใจเป็นพิเศษ' };
+  return               { cls:'rank-growth', label:'🌱 โอกาสเติบโต · Growth',      desc:'พลังงานที่ต่างขั้วกัน แต่ทุกความสัมพันธ์สอนบทเรียนที่มีค่า การสื่อสารเปิดใจและความอดทนคือกุญแจสำคัญ' };
+}
+
+// ── STRENGTHS & CHALLENGES by score range ──
+function getProCon(numS, czS, wzS, a1, a2, s1, s2, lp1, lp2) {
+  const avg = Math.round(numS*0.35 + czS*0.40 + wzS*0.25);
+  const pros = [], cons = [], tips = [];
+
+  // Numerology insights
+  if (numS >= 80) {
+    pros.push(`เลขชีวิต ${lp1} และ ${lp2} สั่นสะเทือนในความถี่ที่ส่งเสริมกัน — เข้าใจเป้าหมายชีวิตของอีกฝ่ายได้โดยไม่ต้องอธิบายมาก`);
+  } else if (numS >= 60) {
+    pros.push(`เลขชีวิตของทั้งสองมีจุดร่วมที่ทำให้รู้สึกคุ้นเคยกันได้เร็ว`);
+    cons.push(`บางครั้งเป้าหมายชีวิตของทั้งสองอาจชี้คนละทิศทาง ต้องหาจุดที่ไปด้วยกันได้`);
+  } else {
+    cons.push(`เลขชีวิต ${lp1} และ ${lp2} มีพลังงานที่ต่างกันมาก อาจรู้สึกว่าอีกฝ่ายมีแรงจูงใจที่ยากจะเข้าใจในบางครั้ง`);
+    tips.push({ icon:'🔢', title:'เรื่องเลขชีวิต', text:'ลองคุยกันเรื่องความฝันและเป้าหมายชีวิตระยะยาว จะพบว่ามีจุดร่วมมากกว่าที่คิด' });
+  }
+
+  // Chinese zodiac insights
+  if (czS >= 88) {
+    pros.push(`${aEM[a1]}${aTH[a1]} และ ${aEM[a2]}${aTH[a2]} คือคู่ที่นักษัตรจีนยกย่องว่าเข้ากันได้ดีเป็นพิเศษ พลังงานของทั้งสองเติมเต็มกันได้อย่างเป็นธรรมชาติ`);
+  } else if (czS >= 65) {
+    pros.push(`${aEM[a1]}${aTH[a1]} และ ${aEM[a2]}${aTH[a2]} มีลักษณะที่เสริมกันได้ในชีวิตประจำวัน`);
+  } else {
+    cons.push(`${aEM[a1]}${aTH[a1]} และ ${aEM[a2]}${aTH[a2]} มีพลังงานที่ต้องการพื้นที่และวิธีการที่แตกต่างกัน ต้องเคารพความต้องการของกันและกัน`);
+    tips.push({ icon:'🏮', title:'เรื่องนักษัตร', text:'ศึกษานิสัยของนักษัตรอีกฝ่าย จะเข้าใจว่าทำไมเขาถึงตอบสนองแบบนั้น' });
+  }
+
+  // Western zodiac insights
+  if (wzS >= 85) {
+    pros.push(`${sTH[s1]} และ ${sTH[s2]} อยู่ในกลุ่มธาตุที่สอดคล้องกัน — การสื่อสารและความรู้สึกไหลเวียนได้อย่างธรรมชาติ`);
+  } else if (wzS >= 65) {
+    pros.push(`ราศีของทั้งสองสร้างสมดุลที่น่าสนใจ แม้จะต่างกันแต่ดึงดูดกันได้`);
+  } else {
+    cons.push(`${sTH[s1]} และ ${sTH[s2]} มีวิธีแสดงออกทางอารมณ์ที่ต่างกันมาก อาจเกิดความเข้าใจผิดได้บ้างในการสื่อสาร`);
+    tips.push({ icon:'⭐', title:'เรื่องราศี', text:'เรียนรู้ภาษาความรักของอีกฝ่าย — บางคนแสดงความรักด้วยการกระทำ บางคนด้วยคำพูด' });
+  }
+
+  // Universal tips
+  tips.push({ icon:'💬', title:'การสื่อสาร', text:'พูดตรงๆ แต่ใจดี — อย่าสมมติว่าอีกฝ่ายรู้ว่าคุณรู้สึกอะไร' });
+  tips.push({ icon:'🕐', title:'เวลาคุณภาพ', text:'สร้างกิจวัตรเล็กๆ ที่ทำด้วยกัน สิ่งเล็กน้อยที่สม่ำเสมอสร้างความผูกพันได้ลึกกว่าโมเมนต์ใหญ่ที่นานๆ ครั้ง' });
+  tips.push({ icon:'🌱', title:'เติบโตด้วยกัน', text:'ให้กำลังใจความฝันของกันและกัน ความสัมพันธ์ที่ดีคือที่ที่ทั้งสองคนกลายเป็นเวอร์ชันที่ดีขึ้นของตัวเอง' });
+  tips.push({ icon:'💝', title:'ขอบคุณกันและกัน', text:'บอกสิ่งที่คุณขอบคุณในตัวเขาอย่างน้อยสัปดาห์ละครั้ง สิ่งเล็กน้อยนี้เปลี่ยนบรรยากาศความสัมพันธ์ได้มาก' });
+
+  if (pros.length === 0) pros.push('แม้คะแนนจะไม่สูง แต่ทุกความสัมพันธ์มีสิ่งที่ดีที่รอให้ค้นพบ');
+
+  return { pros, cons, tips };
+}
+
+// ── CLOSING MESSAGE ──
+function getClosing(score, isThai) {
+  const thaiLine = isThai ? ' และยิ่งไปกว่านั้น — คุณทั้งสองคือ "คู่ลับไทย" ตามศาสตร์โบราณ ซึ่งหมายถึงพันธะที่ลึกกว่าที่ตัวเลขจะบอกได้' : '';
+  if (score >= 90) return `ดวงของคุณทั้งสองสอดคล้องกันในระดับที่หายากมาก${thaiLine} แต่จำไว้ว่า — ดวงเป็นเพียงแผนที่ <strong>คุณคือคนที่เลือกเดินทาง</strong> รักษาสิ่งที่มีอยู่ด้วยความใส่ใจทุกวัน`;
+  if (score >= 80) return `ความเข้ากันของคุณทั้งสองอยู่ในระดับที่น่าชื่นชม${thaiLine} <strong>ความสัมพันธ์ที่ดีไม่ได้เกิดจากดวงเพียงอย่างเดียว</strong> แต่เกิดจากการเลือกรักกันทุกวัน`;
+  if (score >= 60) return `คุณทั้งสองมีทั้งจุดที่เสริมกันและจุดที่ต้องเรียนรู้จากกัน${thaiLine} <strong>ความแตกต่างไม่ใช่อุปสรรค — มันคือครูที่ดีที่สุดในความสัมพันธ์</strong>`;
+  return `ทุกความสัมพันธ์มีบทเรียนของมัน${thaiLine} คะแนนต่ำไม่ได้หมายความว่าความรักจะไม่งอกงาม <strong>การสื่อสาร ความไว้ใจ และความพยายามร่วมกัน สำคัญกว่าคะแนนใดๆ เสมอ</strong>`;
+}
+
+// ── INIT ──
+window.addEventListener('DOMContentLoaded', () => {
+  const p = new URLSearchParams(window.location.search);
+  const lp1=+p.get('lp1'), lp2=+p.get('lp2');
+  const a1=p.get('a1'), a2=p.get('a2');
+  const s1=p.get('s1'), s2=p.get('s2');
+  const numS=+p.get('numS'), czS=+p.get('czS'), wzS=+p.get('wzS');
+  const comp=+p.get('comp');
+  const isThai=p.get('isThai')==='1';
+
+  if (!comp) { window.location.href='checker.html'; return; }
+
+  // Header
+  document.getElementById('lblYou').textContent  = `${aEM[a1]} ${sTH[s1] || s1} · LP${lp1}`;
+  document.getElementById('lblThem').textContent = `${aEM[a2]} ${sTH[s2] || s2} · LP${lp2}`;
+  document.getElementById('lblSub').textContent  = `${aTH[a1]} + ${aTH[a2]} · ${sTH[s1] || s1} + ${sTH[s2] || s2}`;
+
+  // Ring animation
+  const circ = 2 * Math.PI * 65;
+  const fill = document.getElementById('ringFill');
+  fill.style.strokeDasharray = circ;
+  fill.style.strokeDashoffset = circ;
+  setTimeout(() => { fill.style.strokeDashoffset = circ * (1 - comp / 100); }, 100);
+
+  let cur = 0;
+  const iv = setInterval(() => {
+    cur = Math.min(cur + comp/60, comp);
+    document.getElementById('ringNum').textContent = Math.round(cur);
+    if (cur >= comp) clearInterval(iv);
+  }, 16);
+
+  // Rank badge
+  const rank = getRank(comp);
+  const badge = document.getElementById('rankBadge');
+  badge.className = `rank-badge ${rank.cls}`;
+  badge.textContent = rank.label;
+  document.getElementById('rankDesc').textContent = rank.desc;
+
+  // System cards
+  document.getElementById('numNames').textContent = `${lpN[lp1] || 'LP'+lp1} + ${lpN[lp2] || 'LP'+lp2}`;
+  document.getElementById('czNames').textContent  = `${aEM[a1]}${aTH[a1]} + ${aEM[a2]}${aTH[a2]}`;
+  document.getElementById('wzNames').textContent  = `${sEM[s1]||''}${sTH[s1]||s1} + ${sEM[s2]||''}${sTH[s2]||s2}`;
+  document.getElementById('numPct').textContent = numS + '%';
+  document.getElementById('czPct').textContent  = czS  + '%';
+  document.getElementById('wzPct').textContent  = wzS  + '%';
+
+  setTimeout(() => {
+    document.getElementById('numBar').style.width = numS + '%';
+    document.getElementById('czBar').style.width  = czS  + '%';
+    document.getElementById('wzBar').style.width  = wzS  + '%';
+  }, 200);
+
+  // Thai secret
+  const sec1 = thaiSec[a1]?.map(x=>`${aEM[x]}${aTH[x]}`).join(' และ ') || '—';
+  const sec2 = thaiSec[a2]?.map(x=>`${aEM[x]}${aTH[x]}`).join(' และ ') || '—';
+  document.getElementById('thaiBody').innerHTML = `ในศาสตร์โบราณของไทย <strong>${aEM[a1]}${aTH[a1]}</strong> มีคู่ลับคือ ${sec1} — และ <strong>${aEM[a2]}${aTH[a2]}</strong> มีคู่ลับคือ ${sec2}`;
+  document.getElementById('thaiBadge').innerHTML = isThai
+    ? `<div class="match-pill">✦ คุณทั้งสองเป็น "คู่ลับไทย" ของกันและกัน</div>`
+    : `<div class="no-match-pill">นักษัตรของคุณไม่ใช่คู่ลับไทยโดยตรง แต่มีสองระบบอื่นที่เชื่อมคุณไว้</div>`;
+
+  // Pros / Cons / Tips
+  const { pros, cons, tips } = getProCon(numS, czS, wzS, a1, a2, s1, s2, lp1, lp2);
+  document.getElementById('proList').innerHTML = pros.map(p=>`<li>${p}</li>`).join('');
+  document.getElementById('conList').innerHTML = cons.length
+    ? cons.map(c=>`<li>${c}</li>`).join('')
+    : '<li>ยังไม่พบความท้าทายที่ชัดเจน — รักษาสิ่งดีที่มีอยู่ไว้</li>';
+
+  document.getElementById('tipsGrid').innerHTML = tips.map(t=>`
+    <div class="tip-card">
+      <span class="tip-icon">${t.icon}</span>
+      <div class="tip-text"><strong>${t.title}</strong>${t.text}</div>
+    </div>`).join('');
+
+  // Closing
+  document.getElementById('closingTxt').innerHTML = getClosing(comp, isThai);
+
+  // Share card
+  document.getElementById('scPair').textContent = `${aEM[a1]}${aTH[a1]} + ${aEM[a2]}${aTH[a2]}`;
+  document.getElementById('scScore').textContent = comp;
+  document.getElementById('scRank').textContent  = rank.label.replace(/^[^\s]+ /, '');
+  document.getElementById('scNum').textContent   = numS + '%';
+  document.getElementById('scCz').textContent    = czS  + '%';
+  document.getElementById('scWz').textContent    = wzS  + '%';
+});
+
+function shareResult() {
+  const url = window.location.href;
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(url).then(() => {
+      alert('คัดลอกลิงก์แล้ว! นำไปแชร์บน Facebook หรือ LINE ได้เลย 🌟');
+    });
+  } else {
+    prompt('คัดลอกลิงก์นี้:', url);
+  }
+}
+</script>
+</body>
+</html>
